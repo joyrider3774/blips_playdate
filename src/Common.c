@@ -9,12 +9,11 @@ LCDBitmap *IMGBackground=NULL,*IMGFloor=NULL,*IMGPlayer=NULL,*IMGBox=NULL,*IMGEm
 
 LCDFont* font,* BigFont,* RobotoMedium;
 GameStates GameState = GSTitleScreenInit;
-int MusicCount = 0, SelectedMusic = 0, InstalledLevelPacksCount = 0, InstalledLevels = 0, SelectedLevel = 0, SelectedLevelPack = 0;
+int SelectedMusic = 0, InstalledLevelPacksCount = 0, InstalledLevels = 0, SelectedLevel = 0, SelectedLevelPack = 0;
 int UnlockedLevels = 1, GetStringId = -1, GetStringX = 0, GetStringY = 0, AskingQuestionID = -1;
 bool LevelEditorMode=false,LevelHasChanged=false,StageReload=false, AskingGetString=false, AskingQuestion=false, showFPS = false;
 size_t MaxLenGetString = 0;
 CWorldParts *WorldParts;
-int Volume = 128,StartScreenX=0,StartScreenY=0;
 char *LevelPackName = NULL;
 char LevelPackFileName[MaxLevelPackNameLength] = "";
 char InstalledLevelPacks[MaxLevelPacks][MaxLevelPackNameLength];

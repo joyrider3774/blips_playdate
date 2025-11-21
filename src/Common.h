@@ -15,7 +15,7 @@ extern LCDBitmap *IMGBackground, *IMGFloor, *IMGPlayer, *IMGBox, *IMGEmpty, *IMG
 
 extern LCDFont* font,* BigFont,* RobotoMedium;
 extern GameStates GameState;
-extern int MusicCount, SelectedMusic, InstalledLevelPacksCount, InstalledLevels, SelectedLevel;
+extern int SelectedMusic, InstalledLevelPacksCount, InstalledLevels, SelectedLevel;
 extern int SelectedLevelPack, UnlockedLevels, GetStringId, GetStringX, GetStringY, AskingQuestionID;
 extern bool LevelEditorMode, LevelHasChanged, StageReload, AskingGetString, AskingQuestion, showFPS;
 extern size_t MaxLenGetString;

@@ -10,11 +10,11 @@
 #define UI_WIDTH_SCALE 1.25
 #define UI_HEIGHT_SCALE 1.10
 
-#define AlphaInc 20
 #define NrOfRows 50
 #define NrOfCols 50
 #define NrOfColsVisible (ORIG_WINDOW_WIDTH / TileWidth)
 #define NrOfRowsVisible ((ORIG_WINDOW_HEIGHT / TileHeight))
+
 #define IDEmpty 1
 #define IDPlayer 2
 #define IDBox 3
@@ -23,6 +23,7 @@
 #define IDWall 6
 #define IDDiamond 7
 #define IDExplosion 8
+
 #define ZPlayer 10
 #define ZDiamond 3
 #define ZWall 5
@@ -30,16 +31,10 @@
 #define ZBomb 3
 #define ZFloor 1
 #define ZExplosion 15
+
 #define MaxLevelPacks 200
 #define MaxMusicFiles 26
-#define NrOfSounds 6
-#define SND_MENU 0
-#define SND_SELECT 1
-#define SND_ERROR 2
-#define SND_STAGEEND 3
-#define SND_EXPLODE 4
-#define SND_COLLECT 5
-#define MaxAlpha 150
+
 #define MaxLevelPackNameLength 21
 
 #define IDSolvedLevelLevelEditorMode 1
