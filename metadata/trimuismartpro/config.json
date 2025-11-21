@@ -1,0 +1,8 @@
+{
+"package":"io.github.joyrider3774.blips_playdate",
+"label":"Blips",
+"icon":"icon.png",
+"iconsel":"icon.png",
+"launch":"launch.sh",
+"description":"Blips Playdate Created by Joyrider3774"
+}
