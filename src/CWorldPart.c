@@ -296,7 +296,7 @@ void CWorldPart_MoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const int P
 					{
 						for(Teller=0;Teller<WorldPart->ParentList->ItemCount;Teller++)
 						{
-							if(((WorldPart->ParentList->Items[Teller]->Type == IDBox)) && 
+							if((WorldPart->ParentList->Items[Teller]->Type == IDBox) && 
 								((WorldPart->ParentList->Items[Teller]->PlayFieldX == WorldPart->PlayFieldX) && (WorldPart->ParentList->Items[Teller]->PlayFieldY == WorldPart->PlayFieldY)))
 							{
 								CWorldPart_MoveTo(WorldPart->ParentList->Items[Teller], WorldPart->PlayFieldX+1,WorldPart->PlayFieldY,false);
@@ -314,7 +314,7 @@ void CWorldPart_MoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const int P
 					{
 						for(Teller=0;Teller<WorldPart->ParentList->ItemCount;Teller++)
 						{
-							if(((WorldPart->ParentList->Items[Teller]->Type == IDBox)) && 
+							if((WorldPart->ParentList->Items[Teller]->Type == IDBox) && 
 							   ((WorldPart->PlayFieldX == WorldPart->ParentList->Items[Teller]->PlayFieldX )  && 
 							    (WorldPart->ParentList->Items[Teller]->PlayFieldY == WorldPart->PlayFieldY)))
 							{
@@ -332,7 +332,7 @@ void CWorldPart_MoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const int P
 					{
 						for(Teller=0;Teller<WorldPart->ParentList->ItemCount;Teller++)
 						{
-							if(((WorldPart->ParentList->Items[Teller]->Type == IDBox)) && 
+							if((WorldPart->ParentList->Items[Teller]->Type == IDBox) && 
 							   ((WorldPart->PlayFieldY == WorldPart->ParentList->Items[Teller]->PlayFieldY)  && 
 							    (WorldPart->ParentList->Items[Teller]->PlayFieldX == WorldPart->PlayFieldX)))
 							{
@@ -350,7 +350,7 @@ void CWorldPart_MoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const int P
 					{
 						for(Teller=0;Teller<WorldPart->ParentList->ItemCount;Teller++)
 						{
-							if(((WorldPart->ParentList->Items[Teller]->Type == IDBox)) && 
+							if((WorldPart->ParentList->Items[Teller]->Type == IDBox) && 
 							   ((WorldPart->ParentList->Items[Teller]->PlayFieldY == WorldPart->PlayFieldY)  && 
 							    (WorldPart->ParentList->Items[Teller]->PlayFieldX == WorldPart->PlayFieldX )))
 							{
@@ -435,12 +435,12 @@ bool CWorldPart_CanMoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const in
 					{
 						if((WorldPart->ParentList->Items[Teller]->PlayFieldX == PlayFieldXin) && (WorldPart->ParentList->Items[Teller]->PlayFieldY == PlayFieldYin))
 						{
-							if((WorldPart->ParentList->Items[Teller]->Type == IDWall))
+							if(WorldPart->ParentList->Items[Teller]->Type == IDWall)
 							{
 								Result = false;
 								break;
 							}
-							if((WorldPart->ParentList->Items[Teller]->Type == IDBox))
+							if(WorldPart->ParentList->Items[Teller]->Type == IDBox)
 							{
 								if (WorldPart->PlayFieldX > PlayFieldXin)
 								{
