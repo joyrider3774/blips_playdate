@@ -4,5 +4,5 @@
 void Game();
 void ReturnToLevelEditor();
 void RestartLevel();
-void ShowGameInfo();
+
 #endif

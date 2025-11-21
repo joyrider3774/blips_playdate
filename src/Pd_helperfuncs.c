@@ -1,8 +1,7 @@
 #include <string.h>
-#include <pd_api.h>
 #include <stdbool.h>
 #include "Pd_helperfuncs.h"
-
+#include "pd_api.h"
 
 
 PlaydateAPI* pd;

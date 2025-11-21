@@ -2,6 +2,7 @@
 #define GAMEFUNCS_H
 
 #include <stdbool.h>
+#include <stddef.h>
 
 void UnLoadGraphics();
 void FindLevels();

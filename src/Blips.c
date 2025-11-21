@@ -1,4 +1,4 @@
-
+#include <stdbool.h>
 #include "pd_api.h"
 #include "Pd_helperfuncs.h"
 #include "Common.h"
@@ -11,7 +11,6 @@
 #include "LevelEditor.h"
 #include "LevelEditorMenu.h"
 #include "Game.h"
-#include "stdbool.h"
 #include "Sound.h"
 #include "Options.h"
 

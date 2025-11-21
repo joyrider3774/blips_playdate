@@ -1,5 +1,3 @@
-#include <stdint.h>
-#include <stddef.h>
 #include "Menus.h"
 #include "GameFuncs.h"
 #include "Common.h"

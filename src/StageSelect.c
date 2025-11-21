@@ -8,6 +8,7 @@
 #include "Menus.h"
 #include "pd_api.h"
 #include "Crank.h"
+#include "CWorldParts.h"
 
 void StageSelectInit()
 {

@@ -5,7 +5,7 @@
 #include "GameFuncs.h"
 #include "CSelector.h"
 #include "CViewPort.h"
-#include "CWorldPart.h"
+#include "CWorldParts.h"
 #include "CWorldPart.h"
 #include "Pd_helperfuncs.h"
 #include "Crank.h"

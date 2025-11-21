@@ -1,7 +1,6 @@
 #ifndef SOUND_H
 #define SOUND_H
 
-#include <stdint.h>
 #include "pd_api.h"
 
 #define musTitle 1

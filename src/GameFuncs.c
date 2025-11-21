@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdbool.h>
 #include "pd_api.h"
 #include "Pd_helperfuncs.h"
 #include "Common.h"

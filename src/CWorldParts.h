@@ -6,7 +6,6 @@
 #include "Defines.h"
 #include "CViewPort.h"
 #include "stdbool.h"
-#include "stdbool.h"
 
 typedef struct CWorldPart CWorldPart;
 typedef struct CWorldParts CWorldParts;

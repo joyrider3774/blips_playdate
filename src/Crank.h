@@ -1,8 +1,6 @@
 #ifndef crank_h
 #define crank_h
 
-#include <stdlib.h>
-#include <stdio.h>
 #include "Pd_helperfuncs.h"
 #include "pd_api.h"
 
