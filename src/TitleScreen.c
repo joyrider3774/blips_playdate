@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "Defines.h"
-#include "Titlescreen.h"
+#include "TitleScreen.h"
 #include "Common.h"
 #include "GameFuncs.h"
 #include "Pd_helperfuncs.h"
