@@ -27,8 +27,7 @@ void Options()
 		GameState = GSOptions;
 	}
 	int CrankMove = crankUpdate();
-	int id = -1;
-	bool response = false;
+
 	pd->graphics->drawBitmap(IMGTitleScreen,0,0,kBitmapUnflipped);
 	printTitleInfo();
 

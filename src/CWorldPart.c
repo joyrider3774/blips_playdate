@@ -165,7 +165,7 @@ void CWorldPart_Event_ArrivedOnNewSpot(CWorldPart* WorldPart)
 			{
 				if((WorldPart->ParentList->Items[Teller]->PlayFieldX == WorldPart->PlayFieldX) && (WorldPart->ParentList->Items[Teller]->PlayFieldY == WorldPart->PlayFieldY))
 				{
-					if((WorldPart->ParentList->Items[Teller]->Type == IDBomb))
+					if(WorldPart->ParentList->Items[Teller]->Type == IDBomb)
 					{
 						CWorldParts_Add(WorldPart->ParentList, CWorldPart_Create(WorldPart->PlayFieldX,WorldPart->PlayFieldY, IDExplosion));
 						CWorldPart_Kill(WorldPart->ParentList->Items[Teller]);
@@ -174,7 +174,7 @@ void CWorldPart_Event_ArrivedOnNewSpot(CWorldPart* WorldPart)
 						break;
 					}
 
-					if((WorldPart->ParentList->Items[Teller]->Type == IDDiamond))
+					if(WorldPart->ParentList->Items[Teller]->Type == IDDiamond)
 					{
 						CWorldPart_Kill(WorldPart->ParentList->Items[Teller]);
 						playGameCollectSound();

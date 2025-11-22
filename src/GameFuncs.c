@@ -255,7 +255,7 @@ bool getStringUpdate(int* Id, bool* Answered, char* StringBuffer)
 		getStringDraw(StringBuffer, true);
 		char val = StringBuffer[len - 1];
 		val++;
-		if ((val == 'z' + 1))
+		if (val == 'z' + 1)
 		{
 			val = '0';
 		}
@@ -276,7 +276,7 @@ bool getStringUpdate(int* Id, bool* Answered, char* StringBuffer)
 		getStringDraw(StringBuffer, true);
 		char val = StringBuffer[len - 1];
 		val--;
-		if ((val == 'a' - 1))
+		if (val == 'a' - 1)
 		{
 			val = '9';
 		}
