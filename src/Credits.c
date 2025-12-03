@@ -8,23 +8,14 @@
 #include "pd_api.h"
 
 
-char *CreditsTekst;
+char *CreditsTekst, *CreditsTekst2, *CreditsTekst3;
 	
 void CreditsInit()
 {
 	SelectMusic(musTitle);
-	if(InstalledLevelPacksCount > 0)
-	{
-		if(strlen(NormalCreateName) > 0)		
-		{
-			pd->system->formatString(&CreditsTekst,"Blips was created by Willems Davy\nWillems Soft 2006-2025.\nHttps://joyrider3774.itch.io\n\nLevelpack %s\ncreated by %s",LevelPackName,NormalCreateName);
-		}
-		else
-			pd->system->formatString(&CreditsTekst, "Blips was created by Willems Davy\nWillems Soft 2006-2025\nHttps://joyrider3774.itch.io");
-
-	}
-	else
-		pd->system->formatString(&CreditsTekst, "Blips was created by Willems Davy\nWillems Soft 2006-2025\nHttps://joyrider3774.itch.io");
+	pd->system->formatString(&CreditsTekst, "Blips was created by Willems Davy (2006-2025)\nHttps://joyrider3774.itch.io");
+	pd->system->formatString(&CreditsTekst2, "Original games by Bryant Brownell\nbryant.brownell@gmail.com");
+	pd->system->formatString(&CreditsTekst3, "Levelpack % s\ncreated by % s", LevelPackName,NormalCreateName);
 }
 
 void Credits()
@@ -48,11 +39,16 @@ void Credits()
 	pd->graphics->drawRect(41 * UI_WIDTH_SCALE, 71.5 * UI_HEIGHT_SCALE, 238 * UI_WIDTH_SCALE, 97.5 * UI_HEIGHT_SCALE, kColorBlack);
 
 	drawText(font,CreditsTekst,strlen(CreditsTekst), kASCIIEncoding, 45*UI_WIDTH_SCALE,75*UI_HEIGHT_SCALE);
-
+	drawText(font, CreditsTekst2, strlen(CreditsTekst2), kASCIIEncoding, 45 * UI_WIDTH_SCALE, 107 * UI_HEIGHT_SCALE);
+	if (strlen(NormalCreateName) > 0)
+		drawText(font, CreditsTekst3, strlen(CreditsTekst3), kASCIIEncoding, 45 * UI_WIDTH_SCALE, 139 * UI_HEIGHT_SCALE);
+	
 	printTitleInfo();
 
 	if (GameState != GSCredits)
 	{
 		pd->system->realloc(CreditsTekst, 0);
+		pd->system->realloc(CreditsTekst2, 0);
+		pd->system->realloc(CreditsTekst3, 0);
 	}
 }
