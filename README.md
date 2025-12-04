@@ -49,7 +49,7 @@ This will make sure that users when they place your level pack in the levelpacks
 You can only delete level packs that you created yourself using the build in delete level pack option, so basically levelpacks named `[name]._lev` as folder. if you edited levels for existing level packs it will only delete those modified or newly created levels.
 
 ## Credits
-Game is a remake of dos bips game made by Bryant Brownell (bryant.brownell@gmail.com) and based on the gp2x version i initially made
+Game is a remake of dos bips game made by Bryant Brownell and based on the gp2x version i initially made
 
 ### Level authors for Bips Levelpack
 - Bryant Brownell
