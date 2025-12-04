@@ -246,7 +246,6 @@ void CWorldParts_Save(CWorldParts* WorldParts, char *Filename)
 
 void CWorldParts_Save_vircon(CWorldParts* WorldParts, char* Filename)
 {
-	int BufferPosition = 0;
 	SDFile* Fp = pd->file->open(Filename, kFileWrite);
 	if (Fp)
 	{
