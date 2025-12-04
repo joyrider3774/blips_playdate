@@ -25,7 +25,7 @@ bool LevelErrorsFound()
 	{
 		if(WorldParts->Items[Teller]->Type == IDDiamond)
 			NumDiamond++;
-		if(WorldParts->Items[Teller]->Type == IDPlayer)
+		if(WorldParts->Items[Teller]->Type == IDPlayer || WorldParts->Items[Teller]->Type == IDPlayer2)
 			NumPlayer++;
 	}
 	if (NumPlayer==0)
@@ -97,15 +97,24 @@ void CenterLevel()
 		CViewPort_SetViewPort(WorldParts->ViewPort,(NrOfCols / 2) - 12, (NrOfRows / 2) - 7, (NrOfCols / 2) + 12, (NrOfRows / 2) + 7);
 		CSelector_SetPosition(Selector, (NrOfCols / 2), (NrOfRows / 2));
 		//if player found center viewport on player !
+		CWorldPart* Player1 = NULL, * Player2 = NULL;
 		for (int Teller = 0; Teller < WorldParts->ItemCount; Teller++)
 		{
 			if (WorldParts->Items[Teller]->Type == IDPlayer)
 			{
-				CSelector_SetPosition(Selector, WorldParts->Items[Teller]->PlayFieldX, WorldParts->Items[Teller]->PlayFieldY);
-				CWorldParts_CenterVPOnPlayer(WorldParts);
-				break;
+				Player1 = WorldParts->Items[Teller];
+			}
+
+			if (WorldParts->Items[Teller]->Type == IDPlayer2)
+			{
+				Player2 = WorldParts->Items[Teller];
 			}
 		}
+		if(Player1)
+			CSelector_SetPosition(Selector, Player1->PlayFieldX, Player1->PlayFieldY);
+		if(!Player1 && Player2)
+			CSelector_SetPosition(Selector, Player2->PlayFieldX, Player2->PlayFieldY);
+		CWorldParts_CenterVPOnPlayer(WorldParts);
 		CViewPort_SetVPLimit(WorldParts->ViewPort,0, 0, NrOfCols - 1, NrOfRows - 1);
 		if (Xi != 0 || Yi != 0)
 			LevelHasChanged = true;
@@ -127,13 +136,30 @@ void LevelEditorInit()
 		StageReload=false;
 	}
 	buttonIgnoreFramesLevelEditor = 50;
+	CWorldPart* Player1 = NULL, * Player2 = NULL;
 	for (int Teller = 0; Teller < WorldParts->ItemCount; Teller++)
+	{
 		if (WorldParts->Items[Teller]->Type == IDPlayer)
 		{
-			PlayerFound = true;
-			CSelector_SetPosition(Selector, WorldParts->Items[Teller]->PlayFieldX, WorldParts->Items[Teller]->PlayFieldY);
-			break;
+			Player1 = WorldParts->Items[Teller];
 		}
+
+		if (WorldParts->Items[Teller]->Type == IDPlayer2)
+		{
+			Player2 = WorldParts->Items[Teller];
+		}
+	}
+	if (Player1)
+	{
+		CSelector_SetPosition(Selector, Player1->PlayFieldX, Player1->PlayFieldY);
+		PlayerFound = true;
+	}
+	if (!Player1 && Player2)
+	{
+		CSelector_SetPosition(Selector, Player2->PlayFieldX, Player2->PlayFieldY);
+		PlayerFound = true;
+	}
+
 	CViewPort_SetVPLimit(WorldParts->ViewPort, 0, 0, NrOfCols - 1, NrOfRows - 1);
 	if (!PlayerFound)
 	{
@@ -243,17 +269,85 @@ void LevelEditor()
 					break;
 				case IDBox:
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWallBreakable);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox1);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox2);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxBomb);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxWall);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer2);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBomb);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDDiamond);
 					CWorldParts_Add(WorldParts, CWorldPart_Create(CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox));
 					break;
-				case IDPlayer:
+				case IDBox1:
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWallBreakable);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox1);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox2);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxBomb);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer2);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBomb);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDDiamond);
+					CWorldParts_Add(WorldParts, CWorldPart_Create(CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox1));
+					break;
+				case IDBox2:
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWallBreakable);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox1);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox2);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxBomb);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer2);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBomb);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDDiamond);
+					CWorldParts_Add(WorldParts, CWorldPart_Create(CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox2));
+					break;
+				case IDBoxBomb:
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWallBreakable);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox1);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox2);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxBomb);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer2);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBomb);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDDiamond);
+					CWorldParts_Add(WorldParts, CWorldPart_Create(CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxBomb));
+					break;
+				case IDBoxWall:
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWallBreakable);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox1);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox2);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxBomb);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer2);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBomb);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDDiamond);
+					CWorldParts_Add(WorldParts, CWorldPart_Create(CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxWall));
+					break;
+				case IDPlayer:
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWallBreakable);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox1);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox2);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxBomb);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBomb);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDDiamond);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer2);
 					for (Teller = 0; Teller < WorldParts->ItemCount; Teller++)
 					{
 						if (WorldParts->Items[Teller]->Type == IDPlayer)
@@ -261,27 +355,62 @@ void LevelEditor()
 					}
 					CWorldParts_Add(WorldParts, CWorldPart_Create(CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer));
 					break;
+				case IDPlayer2:
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWallBreakable);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox1);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox2);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxBomb);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBomb);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDDiamond);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer);
+					for (Teller = 0; Teller < WorldParts->ItemCount; Teller++)
+					{
+						if (WorldParts->Items[Teller]->Type == IDPlayer2)
+							CWorldParts_Remove_Type(WorldParts, WorldParts->Items[Teller]->PlayFieldX, WorldParts->Items[Teller]->PlayFieldY, IDPlayer2);
+					}
+					CWorldParts_Add(WorldParts, CWorldPart_Create(CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer2));
+					break;
 				case IDWall:
 					CWorldParts_Remove(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector));
 					CWorldParts_Add(WorldParts, CWorldPart_Create(CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWall));
 					break;
+				case IDWallBreakable:
+					CWorldParts_Remove(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector));
+					CWorldParts_Add(WorldParts, CWorldPart_Create(CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWallBreakable));
+					break;
 				case IDFloor:
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDFloor);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWallBreakable);
 					CWorldParts_Add(WorldParts, CWorldPart_Create(CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDFloor));
 					break;
 				case IDBomb:
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWallBreakable);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox1);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox2);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxBomb);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxWall);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer2);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBomb);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDDiamond);
 					CWorldParts_Add(WorldParts, CWorldPart_Create(CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBomb));
 					break;
 				case IDDiamond:
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWall);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWallBreakable);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox1);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBox2);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxBomb);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBoxWall);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer);
+					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDPlayer2);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDBomb);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDDiamond);
 					CWorldParts_Add(WorldParts, CWorldPart_Create(CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDDiamond));

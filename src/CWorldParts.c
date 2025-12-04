@@ -13,16 +13,40 @@ CWorldParts* CWorldParts_Create()
 		Result->ItemCount = 0;
 		Result->MoveAbleItemCount = 0;
 		Result->DisableSorting = false;
+		Result->Player = NULL;
+		Result->Player1 = NULL;
+		Result->Player2 = NULL;
+		Result->ActivePlayer = IDPlayer;
+		Result->ActivePlayerFlicker = 0;
 		Result->ViewPort = CViewPort_Create(0, 0, 25, 15, 0, 0, NrOfCols - 1, NrOfRows - 1);
 	}
 	return Result;
+}
+
+void CWorldParts_SwitchPlayers(CWorldParts* WorldParts)
+{
+	if (!WorldParts->Player2)
+		return;
+
+	if (WorldParts->ActivePlayer == IDPlayer)
+	{
+		WorldParts->ActivePlayer = IDPlayer2;
+		WorldParts->Player = WorldParts->Player2;
+	}
+	else
+	{
+		WorldParts->ActivePlayer = IDPlayer;
+		WorldParts->Player = WorldParts->Player1;
+	}
+	WorldParts->ActivePlayerFlicker = 15;
+	CWorldParts_CenterVPOnPlayer(WorldParts);
 }
 
 void CWorldParts_CenterVPOnPlayer(CWorldParts* WorldParts)
 {
     int Teller=0,PlayerX=-1,PlayerY=-1;
     for (Teller=0;Teller<WorldParts->ItemCount;Teller++)
-        if(WorldParts->Items[Teller]->Type == IDPlayer)
+        if(WorldParts->Items[Teller]->Type == WorldParts->ActivePlayer)
         {
 
             PlayerX = WorldParts->Items[Teller]->PlayFieldX;
@@ -60,18 +84,34 @@ void CWorldParts_RemoveAll(CWorldParts* WorldParts)
 	}
 	WorldParts->ItemCount=0;
 	WorldParts->MoveAbleItemCount = 0;
+	WorldParts->ActivePlayer = -1;
+	WorldParts->Player1 = NULL;
+	WorldParts->Player2 = NULL;
 }
 void CWorldParts_Remove(CWorldParts* WorldParts, int PlayFieldXin,int PlayFieldYin)
 {
 	int Teller1,Teller2;
+	//for (Teller1 = 0; Teller1 < WorldParts->MoveAbleItemCount; Teller1++)
+	//{
+	//	if ((WorldParts->MoveAbleItems[Teller1]->PlayFieldX == PlayFieldXin) && (WorldParts->MoveAbleItems[Teller1]->PlayFieldY == PlayFieldYin))
+	//	{
+	//		for (Teller2 = Teller1; Teller2 < WorldParts->MoveAbleItemCount - 1; Teller2++)
+	//			WorldParts->MoveAbleItems[Teller2] = WorldParts->MoveAbleItems[Teller2 + 1];
+	//		WorldParts->MoveAbleItemCount--;
+	//		if (Teller1 > 0)
+	//			Teller1--;
+	//	}
+	//}
 	for (Teller1=0;Teller1<WorldParts->ItemCount;Teller1++)
 	{
-		if ((Teller1 < WorldParts->MoveAbleItemCount) && (WorldParts->MoveAbleItems[Teller1]->PlayFieldX == PlayFieldXin) && (WorldParts->MoveAbleItems[Teller1]->PlayFieldY == PlayFieldYin))
-		{
-			for (Teller2 = Teller1; Teller2 < WorldParts->MoveAbleItemCount - 1; Teller2++)
-				WorldParts->MoveAbleItems[Teller2] = WorldParts->MoveAbleItems[Teller2 + 1];
-			WorldParts->MoveAbleItemCount--;
-		}
+		//if ((Teller1 < WorldParts->MoveAbleItemCount) && (WorldParts->MoveAbleItems[Teller1]->PlayFieldX == PlayFieldXin) && (WorldParts->MoveAbleItems[Teller1]->PlayFieldY == PlayFieldYin))
+		//{
+		//	for (Teller2 = Teller1; Teller2 < WorldParts->MoveAbleItemCount - 1; Teller2++)
+		//		WorldParts->MoveAbleItems[Teller2] = WorldParts->MoveAbleItems[Teller2 + 1];
+		//	WorldParts->MoveAbleItemCount--;
+		//	if(Teller1 > 0)
+		//		Teller1--;
+		//}
 
 		if ((WorldParts->Items[Teller1]->PlayFieldX == PlayFieldXin) && (WorldParts->Items[Teller1]->PlayFieldY == PlayFieldYin))
 		{
@@ -79,7 +119,8 @@ void CWorldParts_Remove(CWorldParts* WorldParts, int PlayFieldXin,int PlayFieldY
 			for (Teller2=Teller1;Teller2<WorldParts->ItemCount-1;Teller2++)
 				WorldParts->Items[Teller2] = WorldParts->Items[Teller2+1];
 			WorldParts->ItemCount--;
-			Teller1--;
+			if(Teller1 > 0)
+				Teller1--;
 		}
 	}
 }
@@ -87,14 +128,28 @@ void CWorldParts_Remove(CWorldParts* WorldParts, int PlayFieldXin,int PlayFieldY
 void CWorldParts_Remove_Type(CWorldParts* WorldParts, int PlayFieldXin,int PlayFieldYin,int Type)
 {
 	int Teller1,Teller2;
+	//for (Teller1 = 0; Teller1 < WorldParts->MoveAbleItemCount; Teller1++)
+	//{
+	//	if ((WorldParts->MoveAbleItems[Teller1]->PlayFieldX == PlayFieldXin) && (WorldParts->MoveAbleItems[Teller1]->PlayFieldY == PlayFieldYin) && (WorldParts->MoveAbleItems[Teller1]->Type == Type))
+	//	{
+	//		for (Teller2 = Teller1; Teller2 < WorldParts->MoveAbleItemCount - 1; Teller2++)
+	//			WorldParts->MoveAbleItems[Teller2] = WorldParts->MoveAbleItems[Teller2 + 1];
+	//		WorldParts->MoveAbleItemCount--;
+	//		if (Teller1 > 0)
+	//			Teller1--;
+	//	}
+	//}
+
 	for (Teller1=0;Teller1<WorldParts->ItemCount;Teller1++)
 	{
-		if ((Teller1 < WorldParts->MoveAbleItemCount) && (WorldParts->MoveAbleItems[Teller1]->PlayFieldX == PlayFieldXin) && (WorldParts->MoveAbleItems[Teller1]->PlayFieldY == PlayFieldYin) && (WorldParts->MoveAbleItems[Teller1]->Type == Type))
+		/*if ((Teller1 < WorldParts->MoveAbleItemCount) && (WorldParts->MoveAbleItems[Teller1]->PlayFieldX == PlayFieldXin) && (WorldParts->MoveAbleItems[Teller1]->PlayFieldY == PlayFieldYin) && (WorldParts->MoveAbleItems[Teller1]->Type == Type))
 		{
 			for (Teller2 = Teller1; Teller2 < WorldParts->MoveAbleItemCount - 1; Teller2++)
 				WorldParts->MoveAbleItems[Teller2] = WorldParts->MoveAbleItems[Teller2 + 1];
 			WorldParts->MoveAbleItemCount--;
-		}
+			if(Teller1 > 0)
+				Teller1--;
+		}*/
 
 		if ((WorldParts->Items[Teller1]->PlayFieldX == PlayFieldXin) && (WorldParts->Items[Teller1]->PlayFieldY == PlayFieldYin) && (WorldParts->Items[Teller1]->Type == Type))
 		{
@@ -102,7 +157,8 @@ void CWorldParts_Remove_Type(CWorldParts* WorldParts, int PlayFieldXin,int PlayF
 			for (Teller2=Teller1;Teller2<WorldParts->ItemCount-1;Teller2++)
 				WorldParts->Items[Teller2] = WorldParts->Items[Teller2+1];
 			WorldParts->ItemCount--;
-			Teller1--;
+			if(Teller1 > 0)
+				Teller1--;
 		}
 	}
 }
@@ -117,15 +173,26 @@ void CWorldParts_Add(CWorldParts* WorldParts, CWorldPart *WorldPart)
 		CWorldParts_Sort(WorldParts);
 	}
 
-	if ((WorldPart->Type == IDBox) || (WorldPart->Type == IDPlayer))
-		if (WorldParts->MoveAbleItemCount < NrOfRows * NrOfCols * 2)
-		{
-			WorldParts->MoveAbleItems[WorldParts->MoveAbleItemCount++] = WorldPart;
-		}
+	//if ((WorldPart->Type == IDBox) || (WorldPart->Type == IDBox1) || (WorldPart->Type == IDBox2) || (WorldPart->Type == IDPlayer) || (WorldPart->Type == IDPlayer2) ||
+	//	(WorldPart->Type == IDBoxWall) || (WorldPart->Type == IDBoxBomb))
+	//	if (WorldParts->MoveAbleItemCount < NrOfRows * NrOfCols * 2)
+	//	{
+	//		WorldParts->MoveAbleItems[WorldParts->MoveAbleItemCount] = WorldPart;
+	//		WorldParts->MoveAbleItemCount++;
+	//	}
 
 	if (WorldPart->Type == IDPlayer)
 	{
-		WorldParts->Player = WorldPart;
+		WorldParts->Player1 = WorldPart;
+		WorldParts->Player = WorldParts->Player1;
+		WorldParts->ActivePlayer = IDPlayer;
+	}
+
+	if (WorldPart->Type == IDPlayer2)
+	{
+		WorldParts->Player2 = WorldPart;
+		WorldParts->Player = WorldParts->Player2;
+		WorldParts->ActivePlayer = IDPlayer2;
 	}
 	
 }
@@ -177,6 +244,37 @@ void CWorldParts_Save(CWorldParts* WorldParts, char *Filename)
 	}
 }
 
+void CWorldParts_Save_vircon(CWorldParts* WorldParts, char* Filename)
+{
+	int BufferPosition = 0;
+	SDFile* Fp = pd->file->open(Filename, kFileWrite);
+	if (Fp)
+	{
+		int found = 0;
+		uint32_t tmp;
+		for (int z = 0; z < WorldParts->ItemCount; z++)
+		{
+			tmp = WorldParts->Items[z]->Type;
+			pd->file->write(Fp, &tmp, sizeof(tmp));
+			tmp = WorldParts->Items[z]->PlayFieldX;
+			pd->file->write(Fp, &tmp, sizeof(tmp));
+			tmp = WorldParts->Items[z]->PlayFieldY;
+			pd->file->write(Fp, &tmp, sizeof(tmp));
+			found++;
+		}
+		//pad with zero			
+		for (int z = found; z < 2 * NrOfRows * NrOfCols; z++)
+		{
+			tmp = 0;
+			pd->file->write(Fp, &tmp, sizeof(tmp));
+			pd->file->write(Fp, &tmp, sizeof(tmp));
+			pd->file->write(Fp, &tmp, sizeof(tmp));
+		}
+		pd->file->close(Fp);
+	}
+}
+
+
 void CWorldParts_Load(CWorldParts* WorldParts, char *Filename)
 {
 	int X,Y,Type;
@@ -208,6 +306,11 @@ void CWorldParts_Load(CWorldParts* WorldParts, char *Filename)
 		}
 		pd->file->close(Fp);
 		WorldParts->DisableSorting=false;
+		if (WorldParts->Player1 && WorldParts->Player2)
+		{
+			WorldParts->Player = WorldParts->Player1;
+			WorldParts->ActivePlayer = IDPlayer;
+		}
 		CWorldParts_Sort(WorldParts);
 		CWorldParts_LimitVPLevel(WorldParts);
 		CWorldParts_CenterVPOnPlayer(WorldParts);
@@ -264,28 +367,46 @@ void  CWorldParts_DrawFloor(CWorldParts* WorldParts, CWorldPart* Player)
 		return;
 	// Allocate memory for the visited array using malloc
 	bool** visited = (bool**)malloc(NrOfRows * sizeof(bool*));
-	for (int i = 0; i < NrOfRows; ++i)
+	if (visited)
 	{
-		visited[i] = (bool*)malloc(NrOfCols * sizeof(bool));
-		for (int j = 0; j < NrOfCols; ++j)
-			visited[i][j] = false; // Initialize the array to false
+		for (int i = 0; i < NrOfRows; ++i)
+		{
+			visited[i] = (bool*)malloc(NrOfCols * sizeof(bool));
+			if(visited[i])
+				for (int j = 0; j < NrOfCols; ++j)
+					visited[i][j] = false; // Initialize the array to false
+		}
+
+		FloodFill(WorldParts, visited, Player->PlayFieldX, Player->PlayFieldY);
+
+		// Free the allocated memory for the visited array
+		for (int i = 0; i < NrOfRows; ++i)
+			free(visited[i]);
+		free(visited);
 	}
-
-	FloodFill(WorldParts, visited, Player->PlayFieldX, Player->PlayFieldY);
-
-	// Free the allocated memory for the visited array
-	for (int i = 0; i < NrOfRows; ++i)
-		free(visited[i]);
-	free(visited);
 }
 void CWorldParts_Move(CWorldParts* WorldParts)
 {
 	int Teller;
-	for (Teller=0;Teller<WorldParts->MoveAbleItemCount;Teller++)
+	//for (Teller=0;Teller<WorldParts->MoveAbleItemCount;Teller++)
+	//{
+	//	if(WorldParts->MoveAbleItems[Teller]->IsMoving)
+	//		//other items are not moveable and have no effect
+	//		CWorldPart_Move(WorldParts->MoveAbleItems[Teller]);
+	//}
+	WorldParts->MoveAbleItemCount = 0;
+	for (Teller = 0; Teller < WorldParts->ItemCount; Teller++)
 	{
-		if(WorldParts->MoveAbleItems[Teller]->IsMoving)
+		if (WorldParts->Items[Teller]->IsMoving)
+		{
 			//other items are not moveable and have no effect
-			CWorldPart_Move(WorldParts->MoveAbleItems[Teller]);
+			if (!WorldParts->Items[Teller]->PNeedToKill && !WorldParts->Items[Teller]->BHide)
+			{
+				CWorldPart_Move(WorldParts->Items[Teller]);
+				if (!WorldParts->Items[Teller]->PNeedToKill && !WorldParts->Items[Teller]->BHide)
+					WorldParts->MoveAbleItems[WorldParts->MoveAbleItemCount++] = WorldParts->Items[Teller];
+			}
+		}
 	}
 }
 
@@ -299,13 +420,34 @@ void CWorldParts_Draw(CWorldParts* WorldParts)
 	         //go back one item to prevent skips & segaults
 	         Teller--;
 	     }
-	     else
-            if((WorldParts->Items[Teller]->PlayFieldX >= WorldParts->ViewPort->VPMinX) && (WorldParts->Items[Teller]->PlayFieldX-1 <= WorldParts->ViewPort->VPMaxX) &&
-                (WorldParts->Items[Teller]->PlayFieldY >= WorldParts->ViewPort->VPMinY) && (WorldParts->Items[Teller]->PlayFieldY-1 <= WorldParts->ViewPort->VPMaxY))
-            {
-				CWorldPart_Draw(WorldParts->Items[Teller]);
-			}
+		else
+		{
+			if ((WorldParts->Items[Teller]->PlayFieldX >= WorldParts->ViewPort->VPMinX) && (WorldParts->Items[Teller]->PlayFieldX - 1 <= WorldParts->ViewPort->VPMaxX) &&
+				(WorldParts->Items[Teller]->PlayFieldY >= WorldParts->ViewPort->VPMinY) && (WorldParts->Items[Teller]->PlayFieldY - 1 <= WorldParts->ViewPort->VPMaxY))
+			{
+				if (WorldParts->ActivePlayerFlicker > 0)
+				{
+					if (WorldParts->Items[Teller]->Type == WorldParts->ActivePlayer)
+					{
+						if (WorldParts->ActivePlayerFlicker % 3 == 0)
+							CWorldPart_Draw(WorldParts->Items[Teller]);
+					}
+					else
+						CWorldPart_Draw(WorldParts->Items[Teller]);
+
+				}
+				else
+					CWorldPart_Draw(WorldParts->Items[Teller]);
+			}			
+		}
 	}
+
+	//Redraw moving items so they are always drawn on top
+	for (int Teller = 0; Teller < WorldParts->MoveAbleItemCount; Teller++)
+		CWorldPart_Draw(WorldParts->MoveAbleItems[Teller]);
+		
+	if (WorldParts->ActivePlayerFlicker > 0)
+		WorldParts->ActivePlayerFlicker--;
 }
 
 void CWorldParts_Destroy(CWorldParts* WorldParts)

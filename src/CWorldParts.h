@@ -14,14 +14,15 @@ struct CWorldParts
 		CViewPort *ViewPort;
 		CWorldPart *Items[NrOfRows*NrOfCols*2];
 		CWorldPart* MoveAbleItems[NrOfRows * NrOfCols * 2];
-		CWorldPart *Player;
-		int ItemCount, MoveAbleItemCount;	
+		CWorldPart *Player,*Player1,*Player2;
+		int ActivePlayer;
+		int ItemCount, MoveAbleItemCount, ActivePlayerFlicker;
 		bool DisableSorting;	
 };
 
 CWorldParts* CWorldParts_Create();
 void CWorldParts_Sort(CWorldParts* WorldParts);
-
+void CWorldParts_SwitchPlayers(CWorldParts* WorldParts);
 void CWorldParts_Add(CWorldParts* WorldParts, CWorldPart *WorldPart);
 void CWorldParts_CenterVPOnPlayer(CWorldParts* WorldParts);
 void CWorldParts_LimitVPLevel(CWorldParts* WorldParts);
@@ -30,6 +31,7 @@ void CWorldParts_Draw(CWorldParts* WorldParts);
 void CWorldParts_Remove(CWorldParts* WorldParts, int PlayFieldXin,int PlayFieldYin);
 void CWorldParts_Remove_Type(CWorldParts* WorldParts, int PlayFieldXin,int PlayFieldYin,int Type);
 void CWorldParts_RemoveAll(CWorldParts* WorldParts);
+void CWorldParts_Save_vircon(CWorldParts* WorldParts, char* Filename);
 void CWorldParts_Save(CWorldParts* WorldParts, char *Filename);
 void CWorldParts_Load(CWorldParts* WorldParts, char *Filename);
 void CWorldParts_DrawFloor(CWorldParts* WorldParts, CWorldPart* Player);

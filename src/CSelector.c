@@ -49,7 +49,7 @@ void CSelector_IncSelection(CSelector* Selector)
 	//skip floors
 	if (Selector->Selection == IDFloor)
 		Selector->Selection++;
-	if (Selector->Selection > 7)
+	if (Selector->Selection > 13)
 		Selector->Selection = 1;
 	X = Selector->Part->PlayFieldX;
 	Y = Selector->Part->PlayFieldY;
@@ -67,7 +67,7 @@ void CSelector_DecSelection(CSelector* Selector)
 	if (Selector->Selection == IDFloor)
 		Selector->Selection--;
 	if (Selector->Selection < 1)
-		Selector->Selection = 7;
+		Selector->Selection = 13;
 	X = Selector->Part->PlayFieldX;
 	Y = Selector->Part->PlayFieldY;
 	CWorldPart_Destroy(Selector->Part);

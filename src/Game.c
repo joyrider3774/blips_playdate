@@ -28,7 +28,7 @@ void RestartLevel()
 		playMenuSelectSound();
 		pd->graphics->drawBitmap(IMGBackground, 0, 0, kBitmapUnflipped);
 #ifdef SDL2API
-		CWorldParts_DrawFloor(WorldParts, Player);
+		CWorldParts_DrawFloor(WorldParts, WorldParts->Player);
 #endif
 		CWorldParts_Draw(WorldParts);
 		AskQuestion(IDRestartLevel, "You are about to restart this level\nAre you sure you want to restart?\n\nPress (A) to Restart (B) to Cancel");
@@ -56,7 +56,8 @@ void GameInit()
 	{
 		CWorldParts_Load(WorldParts, "blips_temp.lev");
 	}
-	Player=NULL;
+	CWorldPart *Player=NULL;
+	CWorldPart *Player2 = NULL;
 	for (Teller=0;Teller<WorldParts->ItemCount;Teller++)
 	{
 		if (WorldParts->Items[Teller]->Type == IDPlayer)
@@ -64,9 +65,14 @@ void GameInit()
 			Player = WorldParts->Items[Teller];
 			break;
 		}
+
+		if (WorldParts->Items[Teller]->Type == IDPlayer2)
+		{
+			Player2 = WorldParts->Items[Teller];
+		}
 	}
 	//should never happen
-	if(!Player)
+	if(!Player && !Player2)
 	{
 		Player = CWorldPart_Create(0,0, IDPlayer);
 		CWorldParts_Add(WorldParts,Player);
@@ -76,7 +82,6 @@ void GameInit()
 
 void Game()
 {
-	int Teller;
 	char* Msg;
 	char* FileName;
 	if(GameState == GSGameInit)
@@ -88,7 +93,7 @@ void Game()
 	int id = -1;
 	if(!AskingQuestion)
 	{
-		if (!Player->IsMoving && StageDone())
+		if (!WorldParts->Player->IsMoving && StageDone())
 		{
 			playLevelDoneSound();
 			if (LevelEditorMode)
@@ -134,8 +139,13 @@ void Game()
 			}
 		}
 
-		if (!Player->IsMoving && !Player->IsDeath)
+		if (!WorldParts->Player->IsMoving && (((WorldParts->Player1) && !WorldParts->Player1->IsDeath) || ((WorldParts->Player2) && !WorldParts->Player2->IsDeath)))
 		{
+			if (!(prevButtons & kButtonA) && (currButtons & kButtonA))
+			{
+				CWorldParts_SwitchPlayers(WorldParts);
+				buttonIgnoreFramesGame = 15;
+			}
 			if ((buttonIgnoreFramesGame <= 0) && (currButtons & kButtonA))
 			{
 				if (currButtons & kButtonA)
@@ -162,31 +172,31 @@ void Game()
 				}
 			}
 
-			if (!(currButtons & kButtonA) && !Player->IsDeath && (currButtons & kButtonRight))
+			if (!(currButtons & kButtonA) && (((WorldParts->Player1) && !WorldParts->Player1->IsDeath) || ((WorldParts->Player2) && !WorldParts->Player2->IsDeath)) && (currButtons & kButtonRight))
 			{
 				buttonIgnoreFramesGame = 0;
-				CWorldPart_MoveTo(Player, Player->PlayFieldX + 1, Player->PlayFieldY, false);
+				CWorldPart_MoveTo(WorldParts->Player, WorldParts->Player->PlayFieldX + 1, WorldParts->Player->PlayFieldY, false);
 			}
 			else
 			{
-				if (!(currButtons & kButtonA) && !Player->IsDeath &&  (currButtons & kButtonLeft))
+				if (!(currButtons & kButtonA) && (((WorldParts->Player1) && !WorldParts->Player1->IsDeath) || ((WorldParts->Player2) && !WorldParts->Player2->IsDeath)) &&  (currButtons & kButtonLeft))
 				{
 					buttonIgnoreFramesGame = 0;
-					CWorldPart_MoveTo(Player, Player->PlayFieldX - 1, Player->PlayFieldY, false);
+					CWorldPart_MoveTo(WorldParts->Player, WorldParts->Player->PlayFieldX - 1, WorldParts->Player->PlayFieldY, false);
 				}
 				else
 				{
-					if (!(currButtons & kButtonA) && !Player->IsDeath && (currButtons & kButtonUp))
+					if (!(currButtons & kButtonA) && (((WorldParts->Player1) && !WorldParts->Player1->IsDeath) || ((WorldParts->Player2) && !WorldParts->Player2->IsDeath)) && (currButtons & kButtonUp))
 					{
 						buttonIgnoreFramesGame = 0;
-						CWorldPart_MoveTo(Player, Player->PlayFieldX, Player->PlayFieldY - 1, false);
+						CWorldPart_MoveTo(WorldParts->Player, WorldParts->Player->PlayFieldX, WorldParts->Player->PlayFieldY - 1, false);
 					}
 					else
 					{
-						if (!(currButtons & kButtonA) && !Player->IsDeath && (currButtons & kButtonDown))
+						if (!(currButtons & kButtonA) && (((WorldParts->Player1) && !WorldParts->Player1->IsDeath) || ((WorldParts->Player2) && !WorldParts->Player2->IsDeath)) && (currButtons & kButtonDown))
 						{
 							buttonIgnoreFramesGame = 0;
-							CWorldPart_MoveTo(Player, Player->PlayFieldX, Player->PlayFieldY + 1, false);
+							CWorldPart_MoveTo(WorldParts->Player, WorldParts->Player->PlayFieldX, WorldParts->Player->PlayFieldY + 1, false);
 						}
 					}
 				}
@@ -202,7 +212,16 @@ void Game()
 			CWorldParts_DrawFloor(WorldParts, WorldParts->Player);
 #endif
 			CWorldParts_Draw(WorldParts);
-			if (Player->IsDeath)
+			if (true)
+			{
+				char* Tekst;
+				pd->system->formatString(&Tekst, "X: %d - Y: %d", WorldParts->Player->PlayFieldX - WorldParts->ViewPort->VPMinX, WorldParts->Player->PlayFieldY - WorldParts->ViewPort->VPMinY);
+				pd->graphics->fillRect(ORIG_WINDOW_WIDTH - 60 * UI_WIDTH_SCALE, 0, 60 * UI_WIDTH_SCALE, 17 * UI_HEIGHT_SCALE, kColorWhite);
+				pd->graphics->drawRect(ORIG_WINDOW_WIDTH - 60 * UI_WIDTH_SCALE, -1, 61 * UI_WIDTH_SCALE, 18 * UI_HEIGHT_SCALE, kColorBlack);
+				drawText(font, Tekst, strlen(Tekst), kASCIIEncoding, 262 * UI_WIDTH_SCALE, 2 * UI_HEIGHT_SCALE);
+				pd->system->realloc(Tekst, 0);
+			}
+			if (((WorldParts->Player1) && WorldParts->Player1->IsDeath) || ((WorldParts->Player2) && WorldParts->Player2->IsDeath))
 			{
 				ExplosionsFound = false;
 				for (int teller = 0; teller < WorldParts->ItemCount; teller++)
@@ -244,20 +263,6 @@ void Game()
 					}
 					CWorldParts_Load(WorldParts, FileName);
 					pd->system->realloc(FileName, 0);
-					for (int teller = 0; teller < WorldParts->ItemCount; teller++)
-					{
-						if (WorldParts->Items[teller]->Type == IDPlayer)
-						{
-							Player = WorldParts->Items[teller];
-							break;
-						}
-					}
-					//should never happen
-					if (!Player)
-					{
-						Player = CWorldPart_Create(0, 0, IDPlayer);
-						CWorldParts_Add(WorldParts, Player);
-					}
 					CWorldParts_LimitVPLevel(WorldParts);
 				}
 				else
@@ -274,21 +279,7 @@ void Game()
 				}
 				else
 				{					
-					CWorldParts_Load(WorldParts, "blips_temp.lev");
-					for (int teller = 0; teller < WorldParts->ItemCount; teller++)
-					{
-						if (WorldParts->Items[teller]->Type == IDPlayer)
-						{
-							Player = WorldParts->Items[teller];
-							break;
-						}
-					}
-					//should never happen
-					if (!Player)
-					{
-						Player = CWorldPart_Create(0, 0, IDPlayer);
-						CWorldParts_Add(WorldParts, Player);
-					}
+					CWorldParts_Load(WorldParts, "blips_temp.lev");					
 					CWorldParts_LimitVPLevel(WorldParts);
 				}			
 			}
@@ -303,14 +294,6 @@ void Game()
 				{
 					CWorldParts_RemoveAll(WorldParts);
 					CWorldParts_Load(WorldParts,"blips_temp.lev");
-					for (Teller=0;Teller<WorldParts->ItemCount;Teller++)
-					{
-						if (WorldParts->Items[Teller]->Type == IDPlayer)
-						{
-							Player = WorldParts->Items[Teller];
-							break;
-						}
-					}
 					CWorldParts_LimitVPLevel(WorldParts);
 				}
 			}
@@ -351,31 +334,6 @@ void Game()
 						}
 						CWorldParts_Load(WorldParts, FileName);
 						pd->system->realloc(FileName, 0);
-					}
-					Player = NULL;
-					for (Teller = 0; Teller < WorldParts->ItemCount; Teller++)
-					{
-						if (WorldParts->Items[Teller]->Type == IDPlayer)
-						{
-							Player = WorldParts->Items[Teller];
-							break;
-						}
-					}
-					Player = NULL;
-					for (Teller = 0; Teller < WorldParts->ItemCount; Teller++)
-					{
-						if (WorldParts->Items[Teller]->Type == IDPlayer)
-						{
-							Player = WorldParts->Items[Teller];
-							break;
-						}
-					}
-
-					//should never happen
-					if (!Player)
-					{
-						Player = CWorldPart_Create(0, 0, IDPlayer);
-						CWorldParts_Add(WorldParts, Player);
 					}
 					CWorldParts_LimitVPLevel(WorldParts);
 				}

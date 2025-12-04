@@ -4,7 +4,7 @@
 #include "Common.h"
 #include "stdbool.h"
 
-LCDBitmap *IMGBackground=NULL,*IMGFloor=NULL,*IMGPlayer=NULL,*IMGBox=NULL,*IMGEmpty=NULL,*IMGTitleScreen=NULL,*IMGWall=NULL,
+LCDBitmap *IMGBackground=NULL,*IMGFloor=NULL,*IMGPlayer=NULL,*IMGPlayer2=NULL,*IMGBox=NULL,*IMGEmpty=NULL,*IMGTitleScreen=NULL,*IMGWall=NULL,
             *IMGIntro1=NULL,*IMGIntro2=NULL,*IMGIntro3=NULL,*IMGBomb=NULL,*IMGDiamond=NULL,*IMGExplosion=NULL;
 
 LCDFont* font,* BigFont,* RobotoMedium;
@@ -24,4 +24,3 @@ bool paused = false;
 unsigned long framecount = 0, frameUpStart = 0, frameDownStart = 0, frameLeftStart = 0, frameRightStart = 0, frameAStart = 0;
 PDButtons currButtons, prevButtons;
 int Selection = 0;
-CWorldPart *Player = NULL;

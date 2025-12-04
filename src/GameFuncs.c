@@ -71,6 +71,12 @@ void UnLoadGraphics()
 		IMGPlayer = NULL;
 	}
 
+	if (IMGPlayer2)
+	{
+		pd->graphics->freeBitmap(IMGPlayer2);
+		IMGPlayer = NULL;
+	}
+
 	if(IMGBox)
 	{
 		pd->graphics->freeBitmap(IMGBox);
@@ -566,6 +572,11 @@ void LoadGraphics()
 		pd->graphics->freeBitmap(IMGPlayer);
 	}
 
+	if (IMGPlayer2)
+	{
+		pd->graphics->freeBitmap(IMGPlayer2);
+	}
+
 	if(IMGBox)
 	{
 		pd->graphics->freeBitmap(IMGBox);
@@ -621,6 +632,7 @@ void LoadGraphics()
 	IMGDiamond = loadImageAtPath("graphics/diamond");
 	IMGBox = loadImageAtPath("graphics/box");
 	IMGPlayer = loadImageAtPath("graphics/player");
+	IMGPlayer2 = loadImageAtPath("graphics/player2");
 	IMGEmpty = loadImageAtPath("graphics/empty");
 	IMGTitleScreen = loadImageAtPath("graphics/titlescreen");
 	IMGBackground = loadImageAtPath("graphics/background");

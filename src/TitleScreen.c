@@ -135,25 +135,45 @@ void TitleScreen()
 			switch(Selection)
 			{
 				case 1:
-					if (InstalledLevelPacksCount >0)
+					if (InstalledLevelPacksCount > 0)
 					{
 						LoadNormalCreatorName();
 						FindLevels();
-						if(InstalledLevels > 0)
-						{										
+						if (InstalledLevels > 0)
+						{
 							LoadUnlockData();
-							SelectedLevel=UnlockedLevels;
-							LevelEditorMode=false;
-							GameState=GSStageSelectInit;
+							SelectedLevel = UnlockedLevels;
+							LevelEditorMode = false;
+							GameState = GSStageSelectInit;
 							playMenuSelectSound();
 						}
 						else
 						{
 							playMenuSelectSound();
-							pd->system->formatString(&Tekst,"There are no levels found in levelpack\n%s\n\nPlease create a level for this level pack\nfirst!",LevelPackName);
+							pd->system->formatString(&Tekst, "There are no levels found in levelpack\n%s\n\nPlease create a level for this level pack\nfirst!", LevelPackName);
 							AskQuestion(IDNoLevelsInPack, Tekst);
 							pd->system->realloc(Tekst, 0);
 						}
+						/*if (true)
+						{					
+							char* FileName;
+							pd->system->formatString(&FileName, "levelpacks/%s", LevelPackName);
+							pd->file->mkdir(FileName);
+							pd->system->realloc(FileName, 0);
+							for (SelectedLevel = 0; SelectedLevel <= InstalledLevels; SelectedLevel++)
+							{
+								if (SelectedLevel > 0)
+								{
+									pd->system->formatString(&FileName, "levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
+									CWorldParts_Load(WorldParts, FileName);
+									pd->system->realloc(FileName, 0);
+									pd->system->formatString(&FileName, "levelpacks/%s/u32_level%d.lev", LevelPackName, SelectedLevel);
+									CWorldParts_Save_vircon(WorldParts, FileName);
+									pd->system->realloc(FileName, 0);
+								}
+							}
+						}*/
+
 					}
 					break;
 				case 2:

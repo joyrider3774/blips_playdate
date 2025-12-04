@@ -10,7 +10,7 @@ enum GameStates {GSTitleScreen,GSCredits,GSIntro,GSGame,GSStageSelect,GSLevelEdi
     GSTitleScreenInit, GSCreditsInit, GSIntroInit, GSGameInit, GSStageSelectInit, GSLevelEditorInit, GSLevelEditorMenuInit, GSOptionsInit
 };
 
-extern LCDBitmap *IMGBackground, *IMGFloor, *IMGPlayer, *IMGBox, *IMGEmpty, *IMGTitleScreen, *IMGWall,
+extern LCDBitmap *IMGBackground, *IMGFloor, *IMGPlayer, * IMGPlayer2, *IMGBox, *IMGEmpty, *IMGTitleScreen, *IMGWall,
             *IMGIntro1, *IMGIntro2, *IMGIntro3, *IMGBomb, *IMGDiamond, *IMGExplosion;
 
 extern LCDFont* font,* BigFont,* RobotoMedium;
@@ -31,5 +31,4 @@ extern char* LevelPackName;
 extern PDButtons currButtons, prevButtons;
 extern int Selection;
 extern unsigned long framecount, frameUpStart, frameDownStart, frameLeftStart, frameRightStart, frameAStart;
-extern CWorldPart *Player;
 #endif

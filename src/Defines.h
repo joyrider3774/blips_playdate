@@ -22,14 +22,21 @@
 #define IDBomb 5
 #define IDWall 6
 #define IDDiamond 7
-#define IDExplosion 8
+#define IDPlayer2 8
+#define IDBox1 9
+#define IDBox2 10
+#define IDBoxBomb 11
+#define IDBoxWall 12
+#define IDWallBreakable 13
+#define IDExplosion 14
 
 #define ZPlayer 10
 #define ZDiamond 3
-#define ZWall 5
-#define ZBox 5
+#define ZWall 4
+#define ZBox 6
 #define ZBomb 3
 #define ZFloor 1
+#define ZBoxBomb 5
 #define ZExplosion 15
 
 #define MaxLevelPacks 200
