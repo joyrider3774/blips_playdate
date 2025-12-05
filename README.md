@@ -76,4 +76,4 @@ Game is a remake of dos bips, bips gold and bips platinum game made by Bryant Br
 - "back" - created by ViRiX Dreamcore (David McKee) soundcloud.com/virix - Attribution 3.0 Unported - https://opengameart.org/content/ui-and-item-sounds-sample-1
 - "error" - created by ViRiX Dreamcore (David McKee) soundcloud.com/virix - Attribution 3.0 Unported - https://opengameart.org/content/ui-failed-or-error
 - "menu" - created by Tim Mortimer - Attribution 3.0 Unported -  https://opengameart.org/content/4-sci-fi-menu-sounds
-- "move " - created by me (willems davy) using BXFR - feel free to use
+- "move" - created by me (willems davy) using BXFR - feel free to use
