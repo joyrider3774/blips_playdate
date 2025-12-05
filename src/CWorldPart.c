@@ -218,6 +218,9 @@ void CWorldPart_Event_ArrivedOnNewSpot(CWorldPart* WorldPart)
 		{
 			for (Teller=0;Teller<WorldPart->ParentList->ItemCount;Teller++)
 			{
+				if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+					continue;
+
 				if((WorldPart->ParentList->Items[Teller]->PlayFieldX == WorldPart->PlayFieldX) && (WorldPart->ParentList->Items[Teller]->PlayFieldY == WorldPart->PlayFieldY))
 				{
 					if(WorldPart->ParentList->Items[Teller]->Type == IDBomb)
@@ -258,6 +261,9 @@ void CWorldPart_Event_ArrivedOnNewSpot(CWorldPart* WorldPart)
 		{
 			for (Teller = 0; Teller < WorldPart->ParentList->ItemCount; Teller++)
 			{
+				if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+					continue;
+
 				if ((WorldPart->ParentList->Items[Teller]->PlayFieldX == WorldPart->PlayFieldX) && (WorldPart->ParentList->Items[Teller]->PlayFieldY == WorldPart->PlayFieldY) &&
 					(WorldPart->ParentList->Items[Teller]->Type == IDBomb))
 				{
@@ -389,7 +395,7 @@ void CWorldPart_MoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const int P
 	int Teller;
  	if(WorldPart->Type == IDPlayer)
 	{
-		if(!WorldPart->IsMoving)
+		if(!WorldPart->IsMoving && !WorldPart->BHide && !WorldPart->PNeedToKill)
 		{
 			if(CWorldPart_CanMoveTo(WorldPart, PlayFieldXin,PlayFieldYin) || BackWards)
 			{
@@ -402,6 +408,9 @@ void CWorldPart_MoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const int P
 					{
 						for(Teller=0;Teller<WorldPart->ParentList->ItemCount;Teller++)
 						{
+							if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+								continue;
+
 							if((WorldPart->ParentList->Items[Teller]->Type == IDBox || WorldPart->ParentList->Items[Teller]->Type == IDBox1 || 
 								WorldPart->ParentList->Items[Teller]->Type == IDBoxWall || WorldPart->ParentList->Items[Teller]->Type == IDBoxBomb) &&
 								((WorldPart->ParentList->Items[Teller]->PlayFieldX == WorldPart->PlayFieldX) && (WorldPart->ParentList->Items[Teller]->PlayFieldY == WorldPart->PlayFieldY)))
@@ -421,6 +430,9 @@ void CWorldPart_MoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const int P
 					{
 						for(Teller=0;Teller<WorldPart->ParentList->ItemCount;Teller++)
 						{
+							if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+								continue;
+
 							if((WorldPart->ParentList->Items[Teller]->Type == IDBox || WorldPart->ParentList->Items[Teller]->Type == IDBox1 ||
 								WorldPart->ParentList->Items[Teller]->Type == IDBoxWall || WorldPart->ParentList->Items[Teller]->Type == IDBoxBomb) &&
 							   ((WorldPart->PlayFieldX == WorldPart->ParentList->Items[Teller]->PlayFieldX )  && 
@@ -440,6 +452,9 @@ void CWorldPart_MoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const int P
 					{
 						for(Teller=0;Teller<WorldPart->ParentList->ItemCount;Teller++)
 						{
+							if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+								continue;
+
 							if((WorldPart->ParentList->Items[Teller]->Type == IDBox || WorldPart->ParentList->Items[Teller]->Type == IDBox1 ||
 								WorldPart->ParentList->Items[Teller]->Type == IDBoxWall || WorldPart->ParentList->Items[Teller]->Type == IDBoxBomb) &&
 							   ((WorldPart->PlayFieldY == WorldPart->ParentList->Items[Teller]->PlayFieldY)  && 
@@ -459,6 +474,9 @@ void CWorldPart_MoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const int P
 					{
 						for(Teller=0;Teller<WorldPart->ParentList->ItemCount;Teller++)
 						{
+							if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+								continue;
+
 							if((WorldPart->ParentList->Items[Teller]->Type == IDBox || WorldPart->ParentList->Items[Teller]->Type == IDBox1 ||
 								WorldPart->ParentList->Items[Teller]->Type == IDBoxWall || WorldPart->ParentList->Items[Teller]->Type == IDBoxBomb) &&
 							   ((WorldPart->ParentList->Items[Teller]->PlayFieldY == WorldPart->PlayFieldY)  && 
@@ -507,7 +525,7 @@ void CWorldPart_MoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const int P
 	}
 	else if (WorldPart->Type == IDPlayer2)
 	{
-		if (!WorldPart->IsMoving)
+		if (!WorldPart->IsMoving && !WorldPart->PNeedToKill && !WorldPart->BHide)
 		{
 			if (CWorldPart_CanMoveTo(WorldPart, PlayFieldXin, PlayFieldYin) || BackWards)
 			{
@@ -520,6 +538,9 @@ void CWorldPart_MoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const int P
 					{
 						for (Teller = 0; Teller < WorldPart->ParentList->ItemCount; Teller++)
 						{
+							if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+								continue;
+
 							if ((WorldPart->ParentList->Items[Teller]->Type == IDBox || WorldPart->ParentList->Items[Teller]->Type == IDBox2 || 
 								WorldPart->ParentList->Items[Teller]->Type == IDBoxWall || WorldPart->ParentList->Items[Teller]->Type == IDBoxBomb) &&
 								((WorldPart->ParentList->Items[Teller]->PlayFieldX == WorldPart->PlayFieldX) && (WorldPart->ParentList->Items[Teller]->PlayFieldY == WorldPart->PlayFieldY)))
@@ -539,6 +560,9 @@ void CWorldPart_MoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const int P
 					{
 						for (Teller = 0; Teller < WorldPart->ParentList->ItemCount; Teller++)
 						{
+							if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+								continue;
+
 							if ((WorldPart->ParentList->Items[Teller]->Type == IDBox || WorldPart->ParentList->Items[Teller]->Type == IDBox2 ||
 								WorldPart->ParentList->Items[Teller]->Type == IDBoxWall || WorldPart->ParentList->Items[Teller]->Type == IDBoxBomb) &&
 								((WorldPart->PlayFieldX == WorldPart->ParentList->Items[Teller]->PlayFieldX) &&
@@ -558,6 +582,9 @@ void CWorldPart_MoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const int P
 					{
 						for (Teller = 0; Teller < WorldPart->ParentList->ItemCount; Teller++)
 						{
+							if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+								continue;
+
 							if ((WorldPart->ParentList->Items[Teller]->Type == IDBox || WorldPart->ParentList->Items[Teller]->Type == IDBox2 || 
 								WorldPart->ParentList->Items[Teller]->Type == IDBoxWall || WorldPart->ParentList->Items[Teller]->Type == IDBoxBomb) &&
 								((WorldPart->PlayFieldY == WorldPart->ParentList->Items[Teller]->PlayFieldY) &&
@@ -577,6 +604,9 @@ void CWorldPart_MoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const int P
 					{
 						for (Teller = 0; Teller < WorldPart->ParentList->ItemCount; Teller++)
 						{
+							if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+								continue;
+
 							if ((WorldPart->ParentList->Items[Teller]->Type == IDBox || WorldPart->ParentList->Items[Teller]->Type == IDBox2 ||
 								WorldPart->ParentList->Items[Teller]->Type == IDBoxWall || WorldPart->ParentList->Items[Teller]->Type == IDBoxBomb) &&
 								((WorldPart->ParentList->Items[Teller]->PlayFieldY == WorldPart->PlayFieldY) &&
@@ -661,6 +691,9 @@ bool CWorldPart_CanMoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const in
 				{
 					for (Teller = 0; Teller < WorldPart->ParentList->ItemCount; Teller++)
 					{
+						if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+							continue;
+
 						if ((WorldPart->ParentList->Items[Teller]->PlayFieldX == PlayFieldXin) && (WorldPart->ParentList->Items[Teller]->PlayFieldY == PlayFieldYin))
 						{
 							if (WorldPart->ParentList->Items[Teller]->Type == IDWall || WorldPart->ParentList->Items[Teller]->Type == IDWallBreakable || 
@@ -707,6 +740,9 @@ bool CWorldPart_CanMoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const in
 				{
 					for (Teller=0;Teller<WorldPart->ParentList->ItemCount;Teller++)
 					{
+						if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+							continue;
+
 						if((WorldPart->ParentList->Items[Teller]->PlayFieldX == PlayFieldXin) && (WorldPart->ParentList->Items[Teller]->PlayFieldY == PlayFieldYin))
 						{
 							if(WorldPart->ParentList->Items[Teller]->Type == IDWall || WorldPart->ParentList->Items[Teller]->Type == IDWallBreakable ||
@@ -753,17 +789,22 @@ bool CWorldPart_CanMoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const in
 			{
 				if (WorldPart->ParentList)
 				{
-					for (Teller=0;Teller<WorldPart->ParentList->ItemCount;Teller++)
-						if((WorldPart->ParentList->Items[Teller]->Type == IDWall) || (WorldPart->ParentList->Items[Teller]->Type == IDWallBreakable) ||
-							(WorldPart->ParentList->Items[Teller]->Type == IDBox) ||(WorldPart->ParentList->Items[Teller]->Type == IDDiamond) || 
-							(WorldPart->ParentList->Items[Teller]->Type == IDPlayer) || (WorldPart->ParentList->Items[Teller]->Type == IDPlayer2) || 
+					for (Teller = 0; Teller < WorldPart->ParentList->ItemCount; Teller++)
+					{
+						if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+							continue;
+
+						if ((WorldPart->ParentList->Items[Teller]->Type == IDWall) || (WorldPart->ParentList->Items[Teller]->Type == IDWallBreakable) ||
+							(WorldPart->ParentList->Items[Teller]->Type == IDBox) || (WorldPart->ParentList->Items[Teller]->Type == IDDiamond) ||
+							(WorldPart->ParentList->Items[Teller]->Type == IDPlayer) || (WorldPart->ParentList->Items[Teller]->Type == IDPlayer2) ||
 							(WorldPart->ParentList->Items[Teller]->Type == IDBox1) || (WorldPart->ParentList->Items[Teller]->Type == IDBox2) ||
 							(WorldPart->ParentList->Items[Teller]->Type == IDBoxWall))
-							if((WorldPart->ParentList->Items[Teller]->PlayFieldX == PlayFieldXin) && (WorldPart->ParentList->Items[Teller]->PlayFieldY == PlayFieldYin))
+							if ((WorldPart->ParentList->Items[Teller]->PlayFieldX == PlayFieldXin) && (WorldPart->ParentList->Items[Teller]->PlayFieldY == PlayFieldYin))
 							{
 								Result = false;
 								break;
 							}
+					}
 				}
 			}
 			else
@@ -778,13 +819,18 @@ bool CWorldPart_CanMoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const in
 				if (WorldPart->ParentList)
 				{
 					for (Teller = 0; Teller < WorldPart->ParentList->ItemCount; Teller++)
+					{
+						if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+							continue;
+
 						if ((WorldPart->ParentList->Items[Teller]->Type == IDWall) ||
-							(WorldPart->ParentList->Items[Teller]->Type == IDDiamond) )
+							(WorldPart->ParentList->Items[Teller]->Type == IDDiamond))
 							if ((WorldPart->ParentList->Items[Teller]->PlayFieldX == PlayFieldXin) && (WorldPart->ParentList->Items[Teller]->PlayFieldY == PlayFieldYin))
 							{
 								Result = false;
 								break;
 							}
+					}
 				}
 			}
 			else
@@ -799,6 +845,10 @@ bool CWorldPart_CanMoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const in
 				if (WorldPart->ParentList)
 				{
 					for (Teller = 0; Teller < WorldPart->ParentList->ItemCount; Teller++)
+					{
+						if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+							continue;
+
 						if ((WorldPart->ParentList->Items[Teller]->Type == IDWall) || (WorldPart->ParentList->Items[Teller]->Type == IDWallBreakable) ||
 							(WorldPart->ParentList->Items[Teller]->Type == IDBox) || (WorldPart->ParentList->Items[Teller]->Type == IDDiamond) ||
 							(WorldPart->ParentList->Items[Teller]->Type == IDPlayer) || (WorldPart->ParentList->Items[Teller]->Type == IDPlayer2) ||
@@ -808,6 +858,7 @@ bool CWorldPart_CanMoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const in
 								Result = false;
 								break;
 							}
+					}
 				}
 			}
 			else
@@ -824,16 +875,21 @@ bool CWorldPart_CanMoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const in
 				if (WorldPart->ParentList)
 				{
 					for (Teller = 0; Teller < WorldPart->ParentList->ItemCount; Teller++)
-						if ((WorldPart->ParentList->Items[Teller]->Type == IDWall) || (WorldPart->ParentList->Items[Teller]->Type == IDWallBreakable) || 
-							(WorldPart->ParentList->Items[Teller]->Type == IDBox) || (WorldPart->ParentList->Items[Teller]->Type == IDDiamond) || 
-							(WorldPart->ParentList->Items[Teller]->Type == IDPlayer) ||	(WorldPart->ParentList->Items[Teller]->Type == IDPlayer2) || 
-							(WorldPart->ParentList->Items[Teller]->Type == IDBox1) || (WorldPart->ParentList->Items[Teller]->Type == IDBox2) || 
+					{
+						if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+							continue;
+
+						if ((WorldPart->ParentList->Items[Teller]->Type == IDWall) || (WorldPart->ParentList->Items[Teller]->Type == IDWallBreakable) ||
+							(WorldPart->ParentList->Items[Teller]->Type == IDBox) || (WorldPart->ParentList->Items[Teller]->Type == IDDiamond) ||
+							(WorldPart->ParentList->Items[Teller]->Type == IDPlayer) || (WorldPart->ParentList->Items[Teller]->Type == IDPlayer2) ||
+							(WorldPart->ParentList->Items[Teller]->Type == IDBox1) || (WorldPart->ParentList->Items[Teller]->Type == IDBox2) ||
 							(WorldPart->ParentList->Items[Teller]->Type == IDBoxWall))
 							if ((WorldPart->ParentList->Items[Teller]->PlayFieldX == PlayFieldXin) && (WorldPart->ParentList->Items[Teller]->PlayFieldY == PlayFieldYin))
 							{
 								Result = false;
 								break;
 							}
+					}
 				}
 			}
 			else
@@ -850,9 +906,13 @@ bool CWorldPart_CanMoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const in
 				if (WorldPart->ParentList)
 				{
 					for (Teller = 0; Teller < WorldPart->ParentList->ItemCount; Teller++)
+					{
+						if (WorldPart->ParentList->Items[Teller]->PNeedToKill || WorldPart->ParentList->Items[Teller]->BHide)
+							continue;
+
 						if ((WorldPart->ParentList->Items[Teller]->Type == IDWall) || (WorldPart->ParentList->Items[Teller]->Type == IDWallBreakable) ||
-							(WorldPart->ParentList->Items[Teller]->Type == IDBox) || (WorldPart->ParentList->Items[Teller]->Type == IDDiamond) || 
-							(WorldPart->ParentList->Items[Teller]->Type == IDPlayer) ||	(WorldPart->ParentList->Items[Teller]->Type == IDPlayer2) || 
+							(WorldPart->ParentList->Items[Teller]->Type == IDBox) || (WorldPart->ParentList->Items[Teller]->Type == IDDiamond) ||
+							(WorldPart->ParentList->Items[Teller]->Type == IDPlayer) || (WorldPart->ParentList->Items[Teller]->Type == IDPlayer2) ||
 							(WorldPart->ParentList->Items[Teller]->Type == IDBox1) || (WorldPart->ParentList->Items[Teller]->Type == IDBox2) ||
 							(WorldPart->ParentList->Items[Teller]->Type == IDBoxWall))
 							if ((WorldPart->ParentList->Items[Teller]->PlayFieldX == PlayFieldXin) && (WorldPart->ParentList->Items[Teller]->PlayFieldY == PlayFieldYin))
@@ -860,6 +920,7 @@ bool CWorldPart_CanMoveTo(CWorldPart* WorldPart, const int PlayFieldXin,const in
 								Result = false;
 								break;
 							}
+					}
 				}
 			}
 			else
@@ -882,7 +943,7 @@ void CWorldPart_Move(CWorldPart* WorldPart)
 		CWorldPart_Event_ArrivedOnNewSpot(WorldPart);
 		WorldPart->FirstArriveEventFired=true;
 	}*/
-	if (WorldPart->IsMoving)
+	if (WorldPart->IsMoving && !WorldPart->PNeedToKill && !WorldPart->BHide)
 	{
 		if (WorldPart->MoveDelayCounter == WorldPart->MoveDelay)
 		{

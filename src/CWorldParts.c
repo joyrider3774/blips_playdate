@@ -414,7 +414,7 @@ void CWorldParts_Draw(CWorldParts* WorldParts)
 	for (int Teller=0;Teller<WorldParts->ItemCount;Teller++)
 	{
 	    if(WorldParts->Items[Teller]->PNeedToKill)
-	     {
+	    {
 	         CWorldParts_Remove_Type(WorldParts, WorldParts->Items[Teller]->PlayFieldX,WorldParts->Items[Teller]->PlayFieldY,WorldParts->Items[Teller]->Type);
 	         //go back one item to prevent skips & segaults
 	         Teller--;
