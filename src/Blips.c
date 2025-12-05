@@ -13,6 +13,7 @@
 #include "Game.h"
 #include "Sound.h"
 #include "Options.h"
+#include "Instructions.h"
 
 void setupGame()
 {
@@ -80,6 +81,10 @@ int mainLoop(void* ud)
 	pd->system->getButtonState(&currButtons, NULL, NULL);
 	switch (GameState)
 	{
+		case GSInstructionsInit:
+		case GSInstructions:
+			Instructions();
+		break;
 		case GSIntroInit:
 		case GSIntro:
 			Intro();

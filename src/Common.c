@@ -4,7 +4,7 @@
 #include "Common.h"
 #include "stdbool.h"
 
-LCDBitmap *IMGBackground=NULL,*IMGFloor=NULL,*IMGPlayer=NULL,*IMGPlayer2=NULL,*IMGBox=NULL,*IMGEmpty=NULL,*IMGTitleScreen=NULL,*IMGWall=NULL,
+LCDBitmap *IMGBackground=NULL,*IMGFloor=NULL,*IMGPlayer=NULL,*IMGPlayer2=NULL,*IMGBox=NULL,*IMGEmpty=NULL,*IMGTitleScreen=NULL,*IMGInstructions=NULL,*IMGWall=NULL,
             *IMGIntro1=NULL,*IMGIntro2=NULL,*IMGIntro3=NULL,*IMGBomb=NULL,*IMGDiamond=NULL,*IMGExplosion=NULL;
 
 LCDFont* font,* BigFont,* RobotoMedium;

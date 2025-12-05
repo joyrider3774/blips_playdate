@@ -107,6 +107,12 @@ void UnLoadGraphics()
 		IMGTitleScreen = NULL;
 	}
 
+	if (IMGInstructions)
+	{
+		pd->graphics->freeBitmap(IMGInstructions);
+		IMGInstructions = NULL;
+	}
+
     if(IMGIntro1)
 	{
         pd->graphics->freeBitmap(IMGIntro1);
@@ -602,6 +608,11 @@ void LoadGraphics()
 		pd->graphics->freeBitmap(IMGTitleScreen);
 	}
 
+	if (IMGInstructions)
+	{
+		pd->graphics->freeBitmap(IMGInstructions);
+	}
+
     if(IMGIntro1)
 	{
         pd->graphics->freeBitmap(IMGIntro1);
@@ -635,5 +646,6 @@ void LoadGraphics()
 	IMGPlayer2 = loadImageAtPath("graphics/player2");
 	IMGEmpty = loadImageAtPath("graphics/empty");
 	IMGTitleScreen = loadImageAtPath("graphics/titlescreen");
+	IMGInstructions = loadImageAtPath("graphics/instructions");
 	IMGBackground = loadImageAtPath("graphics/background");
 }

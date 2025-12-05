@@ -36,7 +36,7 @@ void Credits()
 	pd->graphics->drawBitmap(IMGTitleScreen, 0, 0, kBitmapUnflipped);
 	pd->graphics->fillRect(40 * UI_WIDTH_SCALE, 70 * UI_HEIGHT_SCALE, 240 * UI_WIDTH_SCALE, 100 * UI_HEIGHT_SCALE, kColorWhite);
 	pd->graphics->drawRect(40 * UI_WIDTH_SCALE, 70 * UI_HEIGHT_SCALE, 240 * UI_WIDTH_SCALE, 100 * UI_HEIGHT_SCALE, kColorBlack);
-	pd->graphics->drawRect(41 * UI_WIDTH_SCALE, 71.5 * UI_HEIGHT_SCALE, 238 * UI_WIDTH_SCALE, 97.5 * UI_HEIGHT_SCALE, kColorBlack);
+	pd->graphics->drawRect(42 * UI_WIDTH_SCALE, 72 * UI_HEIGHT_SCALE, 237 * UI_WIDTH_SCALE, 97 * UI_HEIGHT_SCALE, kColorBlack);
 
 	drawText(font,CreditsTekst,strlen(CreditsTekst), kASCIIEncoding, 45*UI_WIDTH_SCALE,75*UI_HEIGHT_SCALE);
 	drawText(font, CreditsTekst2, strlen(CreditsTekst2), kASCIIEncoding, 45 * UI_WIDTH_SCALE, 107 * UI_HEIGHT_SCALE);

@@ -40,11 +40,11 @@ void TitleScreen()
 		pd->graphics->drawBitmap(IMGTitleScreen,0,0,kBitmapUnflipped);
 		printTitleInfo();
 
-		pd->graphics->fillRect(40*UI_WIDTH_SCALE,70*UI_HEIGHT_SCALE,240*UI_WIDTH_SCALE,100*UI_HEIGHT_SCALE,kColorWhite);
-		pd->graphics->drawRect(40*UI_WIDTH_SCALE,70*UI_HEIGHT_SCALE,240*UI_WIDTH_SCALE,100*UI_HEIGHT_SCALE,kColorBlack);
-		pd->graphics->drawRect(42*UI_WIDTH_SCALE,72*UI_HEIGHT_SCALE,237*UI_WIDTH_SCALE,97*UI_HEIGHT_SCALE,kColorBlack);
-		pd->system->formatString(&Tekst,"Play Selected LevelPack\nLevel Editor\n<%s>\nOptions\nCredits",LevelPackName);
-		drawText(BigFont,Tekst,strlen(Tekst),kASCIIEncoding,70*UI_WIDTH_SCALE,77*UI_HEIGHT_SCALE);
+		pd->graphics->fillRect(40*UI_WIDTH_SCALE,62*UI_HEIGHT_SCALE,240*UI_WIDTH_SCALE,116*UI_HEIGHT_SCALE,kColorWhite);
+		pd->graphics->drawRect(40*UI_WIDTH_SCALE,62*UI_HEIGHT_SCALE,240*UI_WIDTH_SCALE,116*UI_HEIGHT_SCALE,kColorBlack);
+		pd->graphics->drawRect(42*UI_WIDTH_SCALE,64*UI_HEIGHT_SCALE,236*UI_WIDTH_SCALE,112*UI_HEIGHT_SCALE,kColorBlack);
+		pd->system->formatString(&Tekst,"Play Selected LevelPack\nLevel Editor\n<%s>\nOptions\nInstructions\nCredits",LevelPackName);
+		drawText(BigFont,Tekst,strlen(Tekst),kASCIIEncoding,70*UI_WIDTH_SCALE,69*UI_HEIGHT_SCALE);
 		pd->system->realloc(Tekst, 0);
 		Tekst = pd->system->realloc(NULL, 100);
 		if (Selection > 1)
@@ -56,7 +56,7 @@ void TitleScreen()
 		}
 		else
 			strcpy(Tekst,">>");
-		drawText(BigFont,Tekst,strlen(Tekst),kASCIIEncoding, 45*UI_WIDTH_SCALE,77*UI_HEIGHT_SCALE);
+		drawText(BigFont,Tekst,strlen(Tekst),kASCIIEncoding, 45*UI_WIDTH_SCALE,69*UI_HEIGHT_SCALE);
 		pd->system->realloc(Tekst, 0);
 		
 		if (currButtons & kButtonLeft)
@@ -122,7 +122,7 @@ void TitleScreen()
 				frameDownStart = framecount;
 			if (((framecount - frameDownStart) % MenuUpdateTicks == 0) || (CrankMove == CRANKMOVERIGHT))
 			{
-				if (Selection < 5)
+				if (Selection < 6)
 				{
 					Selection++;
 					playMenuSound();
@@ -200,6 +200,10 @@ void TitleScreen()
 					playMenuSelectSound();
 					break;
 				case 5:
+					GameState = GSInstructionsInit;
+					playMenuSelectSound();
+					break;
+				case 6:
 					GameState=GSCreditsInit;
 					playMenuSelectSound();
 					break;

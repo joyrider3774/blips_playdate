@@ -6,11 +6,11 @@
 #include "CWorldParts.h"
 
 typedef enum GameStates GameStates;
-enum GameStates {GSTitleScreen,GSCredits,GSIntro,GSGame,GSStageSelect,GSLevelEditor,GSLevelEditorMenu, GSOptions,
-    GSTitleScreenInit, GSCreditsInit, GSIntroInit, GSGameInit, GSStageSelectInit, GSLevelEditorInit, GSLevelEditorMenuInit, GSOptionsInit
+enum GameStates {GSTitleScreen,GSCredits,GSIntro,GSGame,GSStageSelect,GSLevelEditor,GSLevelEditorMenu, GSOptions, GSInstructions,
+    GSTitleScreenInit, GSCreditsInit, GSIntroInit, GSGameInit, GSStageSelectInit, GSLevelEditorInit, GSLevelEditorMenuInit, GSOptionsInit, GSInstructionsInit
 };
 
-extern LCDBitmap *IMGBackground, *IMGFloor, *IMGPlayer, * IMGPlayer2, *IMGBox, *IMGEmpty, *IMGTitleScreen, *IMGWall,
+extern LCDBitmap *IMGBackground, *IMGFloor, *IMGPlayer, * IMGPlayer2, *IMGBox, *IMGEmpty, *IMGTitleScreen, *IMGInstructions, *IMGWall,
             *IMGIntro1, *IMGIntro2, *IMGIntro3, *IMGBomb, *IMGDiamond, *IMGExplosion;
 
 extern LCDFont* font,* BigFont,* RobotoMedium;
