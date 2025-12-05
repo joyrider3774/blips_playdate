@@ -1,7 +1,7 @@
 # Blips Playdate
 ![DownloadCountTotal](https://img.shields.io/github/downloads/joyrider3774/blips_playdate/total?label=total%20downloads&style=plastic) ![DownloadCountLatest](https://img.shields.io/github/downloads/joyrider3774/blips_playdate/latest/total?style=plastic) ![LatestVersion](https://img.shields.io/github/v/tag/joyrider3774/blips_playdate?label=Latest%20version&style=plastic) ![License](https://img.shields.io/github/license/joyrider3774/blips_playdate?style=plastic)
 
-Blips is a remake of the dos bips game made by Bryant Brownell, its a sokoban style puzzle game but with exploding dynamite and collecting coins
+Blips is a remake of the dos bips original, gold and platinum game made by Bryant Brownell, its a sokoban style puzzle game but with exploding dynamite, special boxes and collecting coins
 
 ## Screenshots
 ![screenshot 1](screenshots/screenshot1.png)
@@ -11,6 +11,8 @@ Blips is a remake of the dos bips game made by Bryant Brownell, its a sokoban st
 
 ## Game Features:
 - 26 Levels of original dos Bips game
+- 18 Levels of original dos Bips Gold game
+- 25 Levels of original dos Bips Platinum game
 - Level Editor (Create your own Levels and Level Packs)
 - Turn on/off sound & music
 - Autosaves progress
@@ -20,7 +22,7 @@ Blips is a remake of the dos bips game made by Bryant Brownell, its a sokoban st
 
 | Button | Action |
 | ------ | ------ |
-| A | Confirm in menus, level selector and questions asked, place a part in the level editor |
+| A | Confirm in menus, level selector and questions asked, place a part in the level editor, Switch players if 2 players exists |
 | B | Quit to title screen on the level selector, Quit to level selector in game and level editor mode. |
 | DPAD | move main player |
 | CRANK | Move in menus, At the level Selector inc/decrease selected level with 5. In the level editor select next/previous part |
@@ -49,7 +51,7 @@ This will make sure that users when they place your level pack in the levelpacks
 You can only delete level packs that you created yourself using the build in delete level pack option, so basically levelpacks named `[name]._lev` as folder. if you edited levels for existing level packs it will only delete those modified or newly created levels.
 
 ## Credits
-Game is a remake of dos bips game made by Bryant Brownell and based on the gp2x version i initially made
+Game is a remake of dos bips, bips gold and bips platinum game made by Bryant Brownell and based on the gp2x version i initially made
 
 ### Level authors for Bips Levelpack
 - Bryant Brownell
