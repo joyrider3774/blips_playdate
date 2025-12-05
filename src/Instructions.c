@@ -6,9 +6,6 @@
 #include "Sound.h"
 #include "Pd_helperfuncs.h"
 #include "pd_api.h"
-
-
-char *CreditsTekst, *CreditsTekst2, *CreditsTekst3;
 	
 void InstructionsInit()
 {
