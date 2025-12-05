@@ -384,7 +384,6 @@ void LevelEditor()
 				case IDFloor:
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDFloor);
 					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWall);
-					CWorldParts_Remove_Type(WorldParts, CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDWallBreakable);
 					CWorldParts_Add(WorldParts, CWorldPart_Create(CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector), IDFloor));
 					break;
 				case IDBomb:
