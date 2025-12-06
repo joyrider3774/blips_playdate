@@ -40,6 +40,11 @@ void setupGame()
 	showFPS = false;
 	paused = false;
 	framecount = 0;
+	frameUpStart = 0;
+	frameDownStart = 0;
+	frameLeftStart = 0;
+	frameRightStart = 0;
+	frameAStart = 0;
 	//normal game stuff
 
 	srand(pd->system->getCurrentTimeMilliseconds());
