@@ -212,7 +212,7 @@ void Game()
 			CWorldParts_DrawFloor(WorldParts, WorldParts->Player);
 #endif
 			CWorldParts_Draw(WorldParts);
-			if (true)
+			if (false)
 			{
 				char* Tekst;
 				pd->system->formatString(&Tekst, "X: %d - Y: %d", WorldParts->Player->PlayFieldX - WorldParts->ViewPort->VPMinX, WorldParts->Player->PlayFieldY - WorldParts->ViewPort->VPMinY);
