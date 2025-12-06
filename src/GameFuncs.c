@@ -74,7 +74,7 @@ void UnLoadGraphics()
 	if (IMGPlayer2)
 	{
 		pd->graphics->freeBitmap(IMGPlayer2);
-		IMGPlayer = NULL;
+		IMGPlayer2 = NULL;
 	}
 
 	if(IMGBox)
