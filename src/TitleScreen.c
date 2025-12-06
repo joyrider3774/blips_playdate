@@ -191,9 +191,9 @@ void TitleScreen()
 							pd->system->realloc(LevelPackName, 0);
 						pd->system->formatString(&LevelPackName,"%s",InstalledLevelPacks[SelectedLevelPack]);
 						LoadNormalCreatorName();
-						playMenuSelectSound();
+						playMenuSound();
 						SaveSettings();
-					}		
+					}
 					break;
 				case 4:
 					GameState = GSOptionsInit;
