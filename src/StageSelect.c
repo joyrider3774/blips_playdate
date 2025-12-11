@@ -39,11 +39,21 @@ void CreateNewLevel()
 {
 	if(!AskingQuestion && LevelEditorMode)
 	{
-		SelectedLevel = 0;
-		CWorldParts_RemoveAll(WorldParts);
-		LevelHasChanged = false;
-		DestroyMenuItems();
-		GameState = GSLevelEditorInit;
+		if (InstalledLevels + 1 <= MAXLEVELS)
+		{
+			SelectedLevel = 0;
+			CWorldParts_RemoveAll(WorldParts);
+			LevelHasChanged = false;
+			DestroyMenuItems();
+			GameState = GSLevelEditorInit;
+		}
+		else
+		{
+			char* Tekst;
+			pd->system->formatString(&Tekst, "The maximum amount (%d) of levels for\nthis levelpack has been reached!\nPlease create a new levelpack or delete a level\n\nPress (A) to continue", MAXLEVELS);
+			AskQuestion(IDMaxLevelsLevelPack, Tekst);
+			pd->system->realloc(Tekst, 0);
+		}
 	}
 }
 
@@ -146,8 +156,25 @@ void StageSelect()
 			playMenuSelectSound();
 			if(LevelEditorMode)
 			{
-				LevelHasChanged = false;
-				GameState = GSLevelEditorInit;
+				if (SelectedLevel == 0)
+				{
+					if (InstalledLevels + 1 <= MAXLEVELS)
+					{
+						LevelHasChanged = false;
+						GameState = GSLevelEditorInit;
+					}
+					else
+					{
+						pd->system->formatString(&Tekst, "The maximum amount (%d) of levels for\nthis levelpack has been reached!\nPlease create a new levelpack or delete a level\n\nPress (A) to continue", MAXLEVELS);
+						AskQuestion(IDMaxLevelsLevelPack, Tekst);
+						pd->system->realloc(Tekst, 0);
+					}
+				}
+				else
+				{
+					LevelHasChanged = false;
+					GameState = GSLevelEditorInit;
+				}
 			}
 			else
 			{

@@ -61,6 +61,7 @@
 #define IDPlayerDied 15
 #define IDBipExported 16
 #define IDBipRefuseExport 17
+#define IDMaxLevelsLevelPack 18
 
 #define MenuUpdateTicks 5
 #define LevelEditorUpdateTicks 4
