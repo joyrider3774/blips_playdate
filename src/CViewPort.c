@@ -47,7 +47,6 @@ CViewPort* CViewPort_Create(int MinX,int MinY, int MaxX,int MaxY,int MinX2,int M
 		Result->Width = Result->VPMaxX - Result->VPMinX;
 		Result->Height = Result->VPMaxY - Result->VPMinY;
 	}
-	pd->system->logToConsole("%d %d %d %d %d %d\n", Result->VPMinX, Result->VPMinY, Result->VPMaxX, Result->VPMaxY, Result->Width, Result->Height);
 	return(Result);
 }
 

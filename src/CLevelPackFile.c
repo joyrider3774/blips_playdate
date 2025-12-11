@@ -9,7 +9,6 @@
 CLevelPackFile* CLevelPackFile_Create()
 {
 	CLevelPackFile* Result = (CLevelPackFile*)pd->system->realloc(NULL, sizeof(CLevelPackFile));
-	pd->system->logToConsole("sizeof(CLevelPackFile):%d\n", sizeof(CLevelPackFile));
 	Result->Loaded = false;
 	Result->LevelCount = 0;
 	memset(Result->author, 0, MAXAUTHORLEN);
