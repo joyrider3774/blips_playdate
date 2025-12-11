@@ -39,7 +39,7 @@ If you wish to create levels yourself, load up the level editor and create a new
 Once a new level pack has been created you can then load it, and you will be in the level selector. 
 just press A or select "Create Level" from the menu and start creating your own levels. The level editor will know when a level has been changed, so it will ask you, 
 if you want to save whenever you quit back to the level selector. The level editor will also automatically choose a filename for the levels, you don't need to worry about this. 
-Once your level pack is finished you can just zip your level pack directory and release it to the public. They will then have to unzip your level pack in the level packs directory and it will be shown inside the game.
+Once your level pack is finished you can just zip your level pack directory or export it to bips ascii format and release it to the public. They will then have to unzip or place your (ascii) level pack in the level packs directory and it will be shown inside the game.
 
 User made levels and packs are saved in the "levelpacks" folder from the games data folder. 
 
@@ -50,6 +50,35 @@ This will make sure that users when they place your level pack in the levelpacks
 #### Deleting Level packs
 You can only delete level packs that you created yourself using the build in delete level pack option, so basically levelpacks named `[name]._lev` as folder. if you edited levels for existing level packs it will only delete those modified or newly created levels.
 
+#### Exporting to ASCII bip file format
+You can export your levelpack to an ASCII bip file from within the leveleditor menu, it allows for easier sharing of your complete levelpacks and the game supports loading these from the levelpacks folder in the game's data folder.
+
+#### ASCII bip file description
+The bip level format is similar to the sok format for sokoban ascii levels as found on:
+http://sokobano.de/en/levels.php and https://www.sourcecode.se/sokoban/levels.php
+
+My parser does not follow 100% the sok format but it did work for the levels above in my sokoban sok format, and i've kept
+the same parsing except for the levels itself as in my sokoban / playdoban game.
+
+The parser does require levels to be fully surrounded by a wall, the lev binary format did not require this so make sure todo this in your levels
+
+This is the Blips level set is defined with the following tile types:
+```
+Tile Legend:
+  # - Wall (6) - immovable barrier
+  @ - Player 1 (2) - 1st player
+  & - Player 2 (8) - Optional 2nd player
+  $ - Box (3) - boxes moveable by any player
+  1 - Box Type 1 (9) - boxes only movable by player 1
+  2 - Box Type 2 (10) - boxes only movable by player 2
+  b - Box Bomb (11) - when pushed into anything else will make it explode except for walls and diamonds
+  w - Box Wall (12) - movable box that looks like a wall and when 2 merge form a wall
+  * - Bomb/Dynamite (5) - anything pushed into this explodes / dies and vanishes
+  d - Diamond (7) - need to collect these
+  x - Breakable Wall (13) - breakable by box bomb
+    - Empty space - (it's a space)
+```
+	
 ## Credits
 Game is a remake of dos bips, bips gold and bips platinum game made by Bryant Brownell and based on the gp2x version i initially made
 
