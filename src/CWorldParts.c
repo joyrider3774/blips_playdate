@@ -7,7 +7,7 @@
 
 CWorldParts* CWorldParts_Create()
 {
-	CWorldParts* Result = (CWorldParts*) malloc(sizeof(CWorldParts));
+	CWorldParts* Result = (CWorldParts*)pd->system->realloc(NULL, sizeof(CWorldParts));
 	if (Result)
 	{
 		Result->ItemCount = 0;
@@ -18,6 +18,7 @@ CWorldParts* CWorldParts_Create()
 		Result->Player2 = NULL;
 		Result->ActivePlayer = IDPlayer;
 		Result->ActivePlayerFlicker = 0;
+		Result->isLevelPackFileLevel = false;
 		Result->ViewPort = CViewPort_Create(0, 0, 25, 15, 0, 0, NrOfCols - 1, NrOfRows - 1);
 	}
 	return Result;
@@ -26,6 +27,9 @@ CWorldParts* CWorldParts_Create()
 void CWorldParts_SwitchPlayers(CWorldParts* WorldParts)
 {
 	if (!WorldParts->Player2)
+		return;
+
+	if (!WorldParts->Player1 && WorldParts->Player2)
 		return;
 
 	if (WorldParts->ActivePlayer == IDPlayer)
@@ -43,16 +47,9 @@ void CWorldParts_SwitchPlayers(CWorldParts* WorldParts)
 }
 
 void CWorldParts_CenterVPOnPlayer(CWorldParts* WorldParts)
-{
-    int Teller=0,PlayerX=-1,PlayerY=-1;
-    for (Teller=0;Teller<WorldParts->ItemCount;Teller++)
-        if(WorldParts->Items[Teller]->Type == WorldParts->ActivePlayer)
-        {
-
-            PlayerX = WorldParts->Items[Teller]->PlayFieldX;
-            PlayerY = WorldParts->Items[Teller]->PlayFieldY;
-            break;
-        }
+{   
+	int PlayerX = WorldParts->Player->PlayFieldX;
+	int PlayerY = WorldParts->Player->PlayFieldY;
     CViewPort_SetViewPort(WorldParts->ViewPort, PlayerX-12, PlayerY-7,PlayerX+12, PlayerY+7);
 }
 
@@ -70,6 +67,25 @@ void CWorldParts_LimitVPLevel(CWorldParts* WorldParts)
 		if (WorldParts->Items[Teller]->PlayFieldY > MaxY)
             MaxY = WorldParts->Items[Teller]->PlayFieldY;
     }
+
+	// To Center smaller levels
+	if (MaxX - MinX < NrOfColsVisible)
+	{
+		int w = MaxX - MinX;
+		MinX -= (NrOfColsVisible - w)/2;
+		if (MinX < 0)
+			MinX = 0;
+		MaxX = MinX + NrOfColsVisible-1;
+	}
+	if (MaxY - MinY < NrOfRowsVisible)
+	{
+		int h = MaxY - MinY;
+		MinY -= (NrOfRowsVisible - h) / 2;
+		if (MinY < 0)
+			MinY = 0;
+		MaxY = MinY + NrOfRowsVisible-1;
+	}
+
     CViewPort_SetVPLimit(WorldParts->ViewPort, MinX,MinY,MaxX,MaxY);
     CWorldParts_CenterVPOnPlayer(WorldParts);
 }
@@ -223,7 +239,7 @@ void CWorldParts_Sort(CWorldParts* WorldParts)
 void CWorldParts_Save(CWorldParts* WorldParts, char *Filename)
 {
 	int Teller,BufferPosition=0;
-	char *Buffer = (char*) malloc(sizeof(char)* 3*WorldParts->ItemCount);
+	char *Buffer = (char*)pd->system->realloc(NULL, sizeof(char) * 3*WorldParts->ItemCount);
 	if (Buffer)
 	{
 		for (Teller = 0; Teller < WorldParts->ItemCount; Teller++)
@@ -240,7 +256,7 @@ void CWorldParts_Save(CWorldParts* WorldParts, char *Filename)
 			pd->file->write(Fp, Buffer, 3 * WorldParts->ItemCount);
 			pd->file->close(Fp);
 		}
-		free(Buffer);
+		pd->system->realloc(Buffer, 0);
 	}
 }
 
@@ -274,11 +290,50 @@ void CWorldParts_Save_vircon(CWorldParts* WorldParts, char* Filename)
 }
 
 
+bool CWorldParts_LoadFromLevelPackFile(CWorldParts* WorldParts, CLevelPackFile* LPFile, int level, bool doCenterLevel)
+{
+	WorldParts->isLevelPackFileLevel = false;
+	CWorldParts_RemoveAll(WorldParts);
+	if (level <= LPFile->LevelCount)
+	{
+		WorldParts->isLevelPackFileLevel = true;
+		WorldParts->DisableSorting = true;
+		int levelIndex = level - 1;
+		int Xi = ((NrOfCols - 1) / 2) - (LPFile->LevelsMeta[levelIndex].maxx + LPFile->LevelsMeta[levelIndex].minx) / 2;
+		int Yi = ((NrOfRows - 1) / 2) - (LPFile->LevelsMeta[levelIndex].maxy + LPFile->LevelsMeta[levelIndex].miny) / 2;
+		if (!doCenterLevel)
+		{
+			Xi = 0;
+			Yi = 0;
+		}
+
+		for (int i = 0; i < LPFile->LevelsMeta[levelIndex].parts; i++)
+		{
+			int Type = LPFile->Levels[levelIndex][i].id;
+			int X = LPFile->Levels[levelIndex][i].x + Xi;
+			int Y = LPFile->Levels[levelIndex][i].y + Yi;
+			if (Type != IDFloor)
+				CWorldParts_Add(WorldParts, CWorldPart_Create(X, Y, Type));
+		}
+		WorldParts->DisableSorting = false;
+		if (WorldParts->Player1 && WorldParts->Player2)
+		{
+			WorldParts->Player = WorldParts->Player1;
+			WorldParts->ActivePlayer = IDPlayer;
+		}
+		CWorldParts_Sort(WorldParts);
+		CWorldParts_LimitVPLevel(WorldParts);
+		return true;
+	}
+	return false;
+}
+
 void CWorldParts_Load(CWorldParts* WorldParts, char *Filename)
 {
 	int X,Y,Type;
 	int BufferPosition=0;
 	long FileSize;
+	WorldParts->isLevelPackFileLevel = false;
 	SDFile* Fp = pd->file->open(Filename,kFileRead | kFileReadData);
 	if (Fp)
 	{
@@ -287,7 +342,7 @@ void CWorldParts_Load(CWorldParts* WorldParts, char *Filename)
 		pd->file->seek(Fp, 0, SEEK_END);
 		FileSize = pd->file->tell(Fp);
 		pd->file->seek(Fp, 0, SEEK_SET);
-		char* Buffer = (char*)malloc(sizeof(char) * FileSize);
+		char* Buffer = (char*)pd->system->realloc(NULL, sizeof(char) * FileSize);
 		if (Buffer)
 		{
 			int read = pd->file->read(Fp, Buffer, FileSize);
@@ -301,7 +356,7 @@ void CWorldParts_Load(CWorldParts* WorldParts, char *Filename)
 				if (Type != IDFloor)
 					CWorldParts_Add(WorldParts, CWorldPart_Create(X, Y, Type));
 			}
-			free(Buffer);
+			pd->system->realloc(Buffer, 0);
 		}
 		pd->file->close(Fp);
 		WorldParts->DisableSorting=false;
@@ -310,11 +365,39 @@ void CWorldParts_Load(CWorldParts* WorldParts, char *Filename)
 			WorldParts->Player = WorldParts->Player1;
 			WorldParts->ActivePlayer = IDPlayer;
 		}
+		CWorldParts_CenterLevel(WorldParts);
 		CWorldParts_Sort(WorldParts);
 		CWorldParts_LimitVPLevel(WorldParts);
-		CWorldParts_CenterVPOnPlayer(WorldParts);
 	}
 
+}
+
+bool CWorldParts_CenterLevel(CWorldParts* WorldParts)
+{
+	int MinX = NrOfCols - 1;
+	int MinY = NrOfRows - 1;
+	int MaxX = 0;
+	int MaxY = 0;
+	for (int Teller = 0; Teller < WorldParts->ItemCount; Teller++)
+	{
+		if (WorldParts->Items[Teller]->PlayFieldX < MinX)
+			MinX = WorldParts->Items[Teller]->PlayFieldX;
+		if (WorldParts->Items[Teller]->PlayFieldY < MinY)
+			MinY = WorldParts->Items[Teller]->PlayFieldY;
+		if (WorldParts->Items[Teller]->PlayFieldX > MaxX)
+			MaxX = WorldParts->Items[Teller]->PlayFieldX;
+		if (WorldParts->Items[Teller]->PlayFieldY > MaxY)
+			MaxY = WorldParts->Items[Teller]->PlayFieldY;
+	}
+	int Xi = ((NrOfCols - 1) / 2) - (MaxX + MinX) / 2;
+	int Yi = ((NrOfRows - 1) / 2) - (MaxY + MinY) / 2;
+	for (int Teller = 0; Teller < WorldParts->ItemCount; Teller++)
+	{
+		CWorldPart_SetPosition(WorldParts->Items[Teller], WorldParts->Items[Teller]->PlayFieldX + Xi, WorldParts->Items[Teller]->PlayFieldY + Yi);
+	}
+	if (Xi != 0 || Yi != 0)
+		return true;
+	return false;
 }
 
 bool CWorldParts_ItemExists(CWorldParts* WorldParts, int PlayFieldXin, int PlayFieldYin, int Type)
@@ -364,13 +447,13 @@ void  CWorldParts_DrawFloor(CWorldParts* WorldParts, CWorldPart* Player)
 {
 	if (!Player)
 		return;
-	// Allocate memory for the visited array using malloc
-	bool** visited = (bool**)malloc(NrOfRows * sizeof(bool*));
+	// Allocate memory for the visited array
+	bool** visited = (bool**)pd->system->realloc(NULL, NrOfRows * sizeof(bool*));
 	if (visited)
 	{
 		for (int i = 0; i < NrOfRows; ++i)
 		{
-			visited[i] = (bool*)malloc(NrOfCols * sizeof(bool));
+			visited[i] = (bool*)pd->system->realloc(NULL, NrOfCols * sizeof(bool));
 			if(visited[i])
 				for (int j = 0; j < NrOfCols; ++j)
 					visited[i][j] = false; // Initialize the array to false
@@ -380,8 +463,8 @@ void  CWorldParts_DrawFloor(CWorldParts* WorldParts, CWorldPart* Player)
 
 		// Free the allocated memory for the visited array
 		for (int i = 0; i < NrOfRows; ++i)
-			free(visited[i]);
-		free(visited);
+			pd->system->realloc(visited[i], 0);
+		pd->system->realloc(visited, 0);
 	}
 }
 void CWorldParts_Move(CWorldParts* WorldParts)

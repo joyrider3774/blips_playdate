@@ -42,7 +42,7 @@
 #define MaxLevelPacks 200
 #define MaxMusicFiles 26
 
-#define MaxLevelPackNameLength 21
+#define MaxLevelPackNameLength 25
 
 #define IDSolvedLevelLevelEditorMode 1
 #define IDSolvedLevelNextUnlocked 2
@@ -59,6 +59,8 @@
 #define IDLevelNotUnlocked 13
 #define IDPlayerDiedLevelEditorMode 14
 #define IDPlayerDied 15
+#define IDBipExported 16
+#define IDBipRefuseExport 17
 
 #define MenuUpdateTicks 5
 #define LevelEditorUpdateTicks 4

@@ -180,9 +180,9 @@ char* GetString(int Id, int x, int y, char* Msg, size_t MaxLen)
 		AskingGetString = true;
 		GetStringId = Id;
 
-		pd->graphics->fillRect(40 * UI_WIDTH_SCALE, 70 * UI_HEIGHT_SCALE, 240 * UI_WIDTH_SCALE, 100 * UI_HEIGHT_SCALE, kColorWhite);
-		pd->graphics->drawRect(40 * UI_WIDTH_SCALE, 70 * UI_HEIGHT_SCALE, 240 * UI_WIDTH_SCALE, 100 * UI_HEIGHT_SCALE, kColorBlack);
-		pd->graphics->drawRect(42 * UI_WIDTH_SCALE, 72 * UI_HEIGHT_SCALE, 237 * UI_WIDTH_SCALE, 97 * UI_HEIGHT_SCALE, kColorBlack);
+		pd->graphics->fillRect(40 * UI_WIDTH_SCALE, 62 * UI_HEIGHT_SCALE, 240 * UI_WIDTH_SCALE, 116 * UI_HEIGHT_SCALE, kColorWhite);
+		pd->graphics->drawRect(40 * UI_WIDTH_SCALE, 62 * UI_HEIGHT_SCALE, 240 * UI_WIDTH_SCALE, 116 * UI_HEIGHT_SCALE, kColorBlack);
+		pd->graphics->drawRect(42 * UI_WIDTH_SCALE, 64 * UI_HEIGHT_SCALE, 236 * UI_WIDTH_SCALE, 112 * UI_HEIGHT_SCALE, kColorBlack);
 		drawText(BigFont, Msg, strlen(Msg), kASCIIEncoding, 65 * UI_WIDTH_SCALE, 75 * UI_HEIGHT_SCALE);
 
 		char* Tekst;
@@ -210,6 +210,8 @@ void getStringDraw(char* StringBuffer, bool ErasingPrevious)
 {
 	char* textBuffer;
 	size_t len = strlen(StringBuffer);
+	if (len == 0)
+		return;
 	textBuffer = pd->system->realloc(NULL, len + 3);
 	memset(textBuffer, 0, len + 3);
 	strcpy(textBuffer, StringBuffer);
@@ -317,7 +319,8 @@ bool getStringUpdate(int* Id, bool* Answered, char* StringBuffer)
 
 	if ((currButtons & kButtonRight) && !(prevButtons & kButtonRight))
 	{
-		if ((len < MaxLenGetString))
+		//-4 for adding .bip to exported ascii file
+		if ((len < MaxLenGetString-4))
 		{
 			getStringDraw(StringBuffer, true);
 			StringBuffer[len] = StringBuffer[len - 1];
@@ -383,7 +386,7 @@ void AskQuestion(int Id, char* Msg)
 	drawText(font, Msg, strlen(Msg), kUTF8Encoding, MsgX, MsgY + diffy);
 
 	AskingQuestionID = Id;
-	AskingQuestion = true;
+	AskingQuestion = (Id > -1);
 	prevButtons = currButtons;
 }
 
@@ -409,7 +412,7 @@ void FindLevelsCallBack(const char *path, void *userdata)
 
 void FindLevels()
 {
-	InstalledLevels = 0;
+	InstalledLevels = LevelPackFile->LevelCount;
 	char* FileName2;
 	char* FileName3;
 
@@ -427,12 +430,25 @@ void printTitleInfo()
 {
 	char Tekst[250];
 	int w;
-	if (strlen(NormalCreateName) > 0)
+	if (LevelPackFile->Loaded)
 	{
-		strcpy(Tekst, "Levels by ");
-		strcat(Tekst, NormalCreateName);
-		w = pd->graphics->getTextWidth(RobotoMedium, Tekst, strlen(Tekst), kUTF8Encoding, 0);
-		drawText(RobotoMedium, Tekst, strlen(Tekst), kUTF8Encoding, (ORIG_WINDOW_WIDTH - w) / 2, 200);
+		if (strlen(LevelPackFile->author) > 0)
+		{
+			strcpy(Tekst, "Levels by ");
+			strcat(Tekst, LevelPackFile->author);
+			w = pd->graphics->getTextWidth(RobotoMedium, Tekst, strlen(Tekst), kUTF8Encoding, 0);
+			drawText(RobotoMedium, Tekst, strlen(Tekst), kUTF8Encoding, (ORIG_WINDOW_WIDTH - w) / 2, 200);
+		}
+	}
+	else
+	{
+		if (strlen(NormalCreateName) > 0)
+		{
+			strcpy(Tekst, "Levels by ");
+			strcat(Tekst, NormalCreateName);
+			w = pd->graphics->getTextWidth(RobotoMedium, Tekst, strlen(Tekst), kUTF8Encoding, 0);
+			drawText(RobotoMedium, Tekst, strlen(Tekst), kUTF8Encoding, (ORIG_WINDOW_WIDTH - w) / 2, 200);
+		}
 	}
 }
 
@@ -536,7 +552,38 @@ void SearchForLevelPacksListFiles(const char* path, void* userdata)
 			}
 		}
 	}
-	
+	//levelpackfiles
+	else
+	{
+		if ((InstalledLevelPacksCount < MaxLevelPacks) && (strlen(path) < MaxLevelPackNameLength))
+		{
+			char* ext;
+			char* dot = strrchr(path, '.');
+			if (dot && !(dot == path))
+			{
+				ext = dot + 1;
+				if ((strcmp(ext, "bip") == 0) || (strcmp(ext, "txt") == 0) || (strcmp(ext, "BIP") == 0) || (strcmp(ext, "TXT") == 0))
+				{
+					bool found = false;
+					for (int i = 0; i < InstalledLevelPacksCount; i++)
+					{
+						if (strcmp(path, InstalledLevelPacks[i]) == 0)
+						{
+							found = true;
+							break;
+						}
+					}
+
+					if (!found)
+					{
+						strcpy(InstalledLevelPacks[InstalledLevelPacksCount], path);
+						InstalledLevelPacksCount++;
+					}
+				}
+			}
+		}
+	}
+
 	if (InstalledLevelPacksCount > 0)
 	{
 		if (LevelPackName)

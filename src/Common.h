@@ -4,6 +4,7 @@
 #include "pd_api.h"
 #include "Defines.h"
 #include "CWorldParts.h"
+#include "CLevelPackFile.h"
 
 typedef enum GameStates GameStates;
 enum GameStates {GSTitleScreen,GSCredits,GSIntro,GSGame,GSStageSelect,GSLevelEditor,GSLevelEditorMenu, GSOptions, GSInstructions,
@@ -15,6 +16,7 @@ extern LCDBitmap *IMGBackground, *IMGFloor, *IMGPlayer, * IMGPlayer2, *IMGBox, *
 
 extern LCDFont* font,* BigFont,* RobotoMedium;
 extern GameStates GameState;
+extern CLevelPackFile* LevelPackFile;
 extern int SelectedMusic, InstalledLevelPacksCount, InstalledLevels, SelectedLevel;
 extern int SelectedLevelPack, UnlockedLevels, GetStringId, GetStringX, GetStringY, AskingQuestionID;
 extern bool LevelEditorMode, LevelHasChanged, StageReload, AskingGetString, AskingQuestion, showFPS;

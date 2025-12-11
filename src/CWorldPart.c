@@ -8,7 +8,7 @@
 
 CWorldPart* CWorldPart_Create(const int PlayFieldXin,const int PlayFieldYin, const int TypeId)
 {
-	CWorldPart* Result = (CWorldPart* ) malloc(sizeof(CWorldPart));
+	CWorldPart* Result = (CWorldPart* ) pd->system->realloc(NULL, sizeof(CWorldPart));
 	if (Result)
 	{
 		Result->PlayFieldX = PlayFieldXin;
@@ -998,6 +998,6 @@ void CWorldPart_Draw(CWorldPart* WorldPart)
 
 void CWorldPart_Destroy(CWorldPart* WorldPart)
 {
-	free(WorldPart);
+	pd->system->realloc(WorldPart, 0);
 	WorldPart = NULL;
 }

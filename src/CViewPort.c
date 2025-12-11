@@ -3,16 +3,16 @@
 
 CViewPort* CViewPort_Create(int MinX,int MinY, int MaxX,int MaxY,int MinX2,int MinY2,int MaxX2,int MaxY2)
 {
-	CViewPort* Result = (CViewPort*) malloc(sizeof(CViewPort));
+	CViewPort* Result = (CViewPort*) pd->system->realloc(NULL, sizeof(CViewPort));
 	if (Result)
 	{
-		if ((MinX < NrOfCols) && (MinX >= 0) && (MaxX + 1 < NrOfCols) && (MaxX >= 0) &&
-			(MinY < NrOfRows) && (MinY >= 0) && (MaxY + 1 < NrOfRows) && (MaxY >= 0))
+		if ((MinX < NrOfCols) && (MinX >= 0) && (MaxX < NrOfCols) && (MaxX >= 0) &&
+			(MinY < NrOfRows) && (MinY >= 0) && (MaxY < NrOfRows) && (MaxY >= 0))
 		{
 			Result->VPMinX = MinX;
 			Result->VPMinY = MinY;
-			Result->VPMaxX = MaxX + 1;
-			Result->VPMaxY = MaxY + 1;
+			Result->VPMaxX = MaxX;
+			Result->VPMaxY = MaxY;
 			Result->MinScreenX = Result->VPMinX * TileWidth;
 			Result->MinScreenY = Result->VPMinY * TileHeight;
 			Result->MaxScreenX = Result->VPMaxX * TileHeight;
@@ -22,8 +22,8 @@ CViewPort* CViewPort_Create(int MinX,int MinY, int MaxX,int MaxY,int MinX2,int M
 		{
 			Result->VPMinX = 0;
 			Result->VPMinY = 0;
-			Result->VPMaxX = NrOfColsVisible;
-			Result->VPMaxY = NrOfRowsVisible;
+			Result->VPMaxX = NrOfColsVisible-1;
+			Result->VPMaxY = NrOfRowsVisible-1;
 			Result->MinScreenX = 0;
 			Result->MinScreenY = 0;
 			Result->MaxScreenX = WINDOW_WIDTH;
@@ -47,6 +47,7 @@ CViewPort* CViewPort_Create(int MinX,int MinY, int MaxX,int MaxY,int MinX2,int M
 		Result->Width = Result->VPMaxX - Result->VPMinX;
 		Result->Height = Result->VPMaxY - Result->VPMinY;
 	}
+	pd->system->logToConsole("%d %d %d %d %d %d\n", Result->VPMinX, Result->VPMinY, Result->VPMaxX, Result->VPMaxY, Result->Width, Result->Height);
 	return(Result);
 }
 
@@ -160,7 +161,7 @@ void CViewPort_SetViewPort(CViewPort* ViewPort, int MinX,int MinY, int MaxX,int 
 
 void CViewPort_Destroy(CViewPort* ViewPort)
 {
-	free(ViewPort);
+	pd->system->realloc(ViewPort, 0);
 	ViewPort = NULL;
 }
 

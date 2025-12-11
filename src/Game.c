@@ -76,8 +76,8 @@ void GameInit()
 	{
 		Player = CWorldPart_Create(0,0, IDPlayer);
 		CWorldParts_Add(WorldParts,Player);
+		CWorldParts_LimitVPLevel(WorldParts);
 	}
-	CWorldParts_LimitVPLevel(WorldParts);
 }
 
 void Game()
@@ -167,7 +167,6 @@ void Game()
 				if (ResetViewPort)
 				{
 					CWorldParts_LimitVPLevel(WorldParts);
-					CWorldParts_CenterVPOnPlayer(WorldParts);
 					ResetViewPort = false;
 				}
 			}
@@ -255,15 +254,24 @@ void Game()
 			{
 				if (response)
 				{
-					pd->system->formatString(&FileName, "levelpacks/%s._lev/level%d.lev", LevelPackName, SelectedLevel);
-					if (!FileExists(FileName, true))
+					if (LevelEditorMode && StageReload)
 					{
-						pd->system->realloc(FileName, 0);
-						pd->system->formatString(&FileName, "levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
+						CWorldParts_Load(WorldParts, "blips_temp.lev");
 					}
-					CWorldParts_Load(WorldParts, FileName);
-					pd->system->realloc(FileName, 0);
-					CWorldParts_LimitVPLevel(WorldParts);
+					else
+					{
+						pd->system->formatString(&FileName, "levelpacks/%s._lev/level%d.lev", LevelPackName, SelectedLevel);
+						if (!FileExists(FileName, true))
+						{
+							pd->system->realloc(FileName, 0);
+							pd->system->formatString(&FileName, "levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
+						}
+						if (FileExists(FileName, true) || FileExists(FileName, false))
+							CWorldParts_Load(WorldParts, FileName);
+						else
+							CWorldParts_LoadFromLevelPackFile(WorldParts, LevelPackFile, SelectedLevel, true);
+						pd->system->realloc(FileName, 0);
+					}
 				}
 				else
 				{
@@ -280,7 +288,6 @@ void Game()
 				else
 				{					
 					CWorldParts_Load(WorldParts, "blips_temp.lev");					
-					CWorldParts_LimitVPLevel(WorldParts);
 				}			
 			}
 
@@ -294,7 +301,6 @@ void Game()
 				{
 					CWorldParts_RemoveAll(WorldParts);
 					CWorldParts_Load(WorldParts,"blips_temp.lev");
-					CWorldParts_LimitVPLevel(WorldParts);
 				}
 			}
 
@@ -322,7 +328,7 @@ void Game()
 				{
 					if (LevelEditorMode && StageReload)
 					{
-						CWorldParts_Load(WorldParts, "blips_temp.lev");						
+						CWorldParts_Load(WorldParts, "blips_temp.lev");
 					}
 					else
 					{
@@ -332,10 +338,12 @@ void Game()
 							pd->system->realloc(FileName, 0);
 							pd->system->formatString(&FileName, "levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
 						}
-						CWorldParts_Load(WorldParts, FileName);
+						if (FileExists(FileName, true) || FileExists(FileName, false))
+							CWorldParts_Load(WorldParts, FileName);
+						else
+							CWorldParts_LoadFromLevelPackFile(WorldParts, LevelPackFile, SelectedLevel, true);
 						pd->system->realloc(FileName, 0);
 					}
-					CWorldParts_LimitVPLevel(WorldParts);
 				}
 			}
 		}

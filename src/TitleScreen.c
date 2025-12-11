@@ -14,9 +14,13 @@ void TitleScreenInit()
 	setCrankMoveThreshold(180);
 	Selection = 1;
 	SelectMusic(musTitle);
+	char* FileName;
 	
 	if (InstalledLevelPacksCount > 0)
 	{
+		pd->system->formatString(&FileName, "levelpacks/%s", LevelPackName);
+		CLevelPackFile_loadFile(LevelPackFile, FileName, NrOfCols, NrOfRows, true);
+		pd->system->realloc(FileName, 0);
 		LoadNormalCreatorName();
 	}
 }
@@ -25,7 +29,7 @@ void TitleScreenInit()
 void TitleScreen()
 {
     int Teller;
-	char* Tekst;
+	char* Tekst, *FileName;
 
 	if (GameState == GSTitleScreenInit)
 	{
@@ -74,6 +78,9 @@ void TitleScreen()
 						if (LevelPackName)
 							pd->system->realloc(LevelPackName, 0);
 						pd->system->formatString(&LevelPackName, "%s", InstalledLevelPacks[SelectedLevelPack]);
+						pd->system->formatString(&FileName, "levelpacks/%s", LevelPackName);
+						CLevelPackFile_loadFile(LevelPackFile, FileName, NrOfCols, NrOfRows, true);
+						pd->system->realloc(FileName, 0);
 						LoadNormalCreatorName();
 						playMenuSound();
 						SaveSettings();
@@ -96,6 +103,9 @@ void TitleScreen()
 						if (LevelPackName)
 							pd->system->realloc(LevelPackName, 0);
 						pd->system->formatString(&LevelPackName, "%s", InstalledLevelPacks[SelectedLevelPack]);
+						pd->system->formatString(&FileName, "levelpacks/%s", LevelPackName);
+						CLevelPackFile_loadFile(LevelPackFile, FileName, NrOfCols, NrOfRows, true);
+						pd->system->realloc(FileName, 0);
 						LoadNormalCreatorName();
 						playMenuSound();
 						SaveSettings();
@@ -137,6 +147,9 @@ void TitleScreen()
 				case 1:
 					if (InstalledLevelPacksCount > 0)
 					{
+						pd->system->formatString(&FileName, "levelpacks/%s", LevelPackName);
+						CLevelPackFile_loadFile(LevelPackFile, FileName, NrOfCols, NrOfRows, false);
+						pd->system->realloc(FileName, 0);
 						LoadNormalCreatorName();
 						FindLevels();
 						if (InstalledLevels > 0)
@@ -154,27 +167,29 @@ void TitleScreen()
 							AskQuestion(IDNoLevelsInPack, Tekst);
 							pd->system->realloc(Tekst, 0);
 						}
-						/*if (true)
-						{					
-							char* FileName;
-							pd->system->formatString(&FileName, "levelpacks/%s", LevelPackName);
-							pd->file->mkdir(FileName);
-							pd->system->realloc(FileName, 0);
-							for (SelectedLevel = 0; SelectedLevel <= InstalledLevels; SelectedLevel++)
-							{
-								if (SelectedLevel > 0)
-								{
-									pd->system->formatString(&FileName, "levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
-									CWorldParts_Load(WorldParts, FileName);
-									pd->system->realloc(FileName, 0);
-									pd->system->formatString(&FileName, "levelpacks/%s/u32_level%d.lev", LevelPackName, SelectedLevel);
-									CWorldParts_Save_vircon(WorldParts, FileName);
-									pd->system->realloc(FileName, 0);
-								}
-							}
-						}*/
-
 					}
+
+					
+					/*if (true)
+					{					
+						char* FileName;
+						pd->system->formatString(&FileName, "levelpacks/%s", LevelPackName);
+						pd->file->mkdir(FileName);
+						pd->system->realloc(FileName, 0);
+						for (SelectedLevel = 0; SelectedLevel <= InstalledLevels; SelectedLevel++)
+						{
+							if (SelectedLevel > 0)
+							{
+								pd->system->formatString(&FileName, "levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
+								CWorldParts_Load(WorldParts, FileName);
+								pd->system->realloc(FileName, 0);
+								pd->system->formatString(&FileName, "levelpacks/%s/u32_level%d.lev", LevelPackName, SelectedLevel);
+								CWorldParts_Save_vircon(WorldParts, FileName);
+								pd->system->realloc(FileName, 0);
+							}
+						}
+					}*/
+
 					break;
 				case 2:
 					GameState=GSLevelEditorMenuInit;

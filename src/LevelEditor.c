@@ -131,7 +131,6 @@ void LevelEditorInit()
 	if (StageReload)
 	{
 		CWorldParts_Load(WorldParts, "blips_temp.lev");
-		CWorldParts_LimitVPLevel(WorldParts);
 		pd->file->unlink("blips_temp.lev", false);
 		StageReload=false;
 	}

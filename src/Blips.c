@@ -57,11 +57,11 @@ void setupGame()
 	pd->file->mkdir("levelpacks");
 
 	SearchForLevelPacks();
-	FindLevels();
 	initSound();
 	initMusic();
 	LoadSettings();
 	LoadGraphics();
+	LevelPackFile = CLevelPackFile_Create();
 }
 
 void terminateGame()
@@ -75,6 +75,7 @@ void terminateGame()
 	RobotoMedium = NULL;
 	CWorldParts_RemoveAll(WorldParts);
 	CWorldParts_Destroy(WorldParts);
+	CLevelPackFile_Destroy(LevelPackFile);
 }
 
 

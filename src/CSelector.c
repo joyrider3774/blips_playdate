@@ -5,7 +5,7 @@
 
 CSelector *CSelector_Create(CWorldParts* List)
 {
-	CSelector* Result = (CSelector*) malloc(sizeof(CSelector));
+	CSelector* Result = (CSelector*) pd->system->realloc(NULL, sizeof(CSelector));
 	if (Result)
 	{
 		Result->PList = List;
@@ -101,7 +101,7 @@ void CSelector_Destroy(CSelector* Selector)
 	if(Selector)
 	{
 		CWorldPart_Destroy(Selector->Part);
-		free(Selector);
+		pd->system->realloc(Selector, 0);
 		Selector = NULL;
 	}
 }

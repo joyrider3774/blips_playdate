@@ -3,6 +3,7 @@
 #include "Defines.h"
 #include "Common.h"
 #include "stdbool.h"
+#include "CLevelPackFile.h"
 
 LCDBitmap *IMGBackground=NULL,*IMGFloor=NULL,*IMGPlayer=NULL,*IMGPlayer2=NULL,*IMGBox=NULL,*IMGEmpty=NULL,*IMGTitleScreen=NULL,*IMGInstructions=NULL,*IMGWall=NULL,
             *IMGIntro1=NULL,*IMGIntro2=NULL,*IMGIntro3=NULL,*IMGBomb=NULL,*IMGDiamond=NULL,*IMGExplosion=NULL;
@@ -15,6 +16,7 @@ bool LevelEditorMode=false,LevelHasChanged=false,StageReload=false, AskingGetStr
 size_t MaxLenGetString = 0;
 CWorldParts *WorldParts;
 char *LevelPackName = NULL;
+CLevelPackFile* LevelPackFile;
 char LevelPackFileName[MaxLevelPackNameLength] = "";
 char InstalledLevelPacks[MaxLevelPacks][MaxLevelPackNameLength];
 int WINDOW_WIDTH = 400;

@@ -9,6 +9,7 @@
 #include "pd_api.h"
 #include "Crank.h"
 #include "CWorldParts.h"
+#include "CLevelPackFile.h"
 
 void StageSelectInit()
 {
@@ -17,15 +18,17 @@ void StageSelectInit()
 	CreateStageSelectMenuItems();
 	if (SelectedLevel > 0)
 	{
-		pd->system->formatString(&FileName,"levelpacks/%s._lev/level%d.lev", LevelPackName, SelectedLevel);
-		if(!FileExists(FileName, true))
+		pd->system->formatString(&FileName, "levelpacks/%s._lev/level%d.lev", LevelPackName, SelectedLevel);
+		if (!FileExists(FileName, true))
 		{
 			pd->system->realloc(FileName, 0);
-			pd->system->formatString(&FileName,"levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
+			pd->system->formatString(&FileName, "levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
 		}
-		CWorldParts_Load(WorldParts,FileName);
+		if (FileExists(FileName, true) || FileExists(FileName, false))
+			CWorldParts_Load(WorldParts, FileName);
+		else
+			CWorldParts_LoadFromLevelPackFile(WorldParts, LevelPackFile, SelectedLevel, true);
 		pd->system->realloc(FileName, 0);
-		CWorldParts_LimitVPLevel(WorldParts);
 	}
 	else
 		CWorldParts_RemoveAll(WorldParts);
@@ -78,7 +81,35 @@ void StageSelect()
 #ifdef SDL2API
 			CWorldParts_DrawFloor(WorldParts, WorldParts->Player);
 #endif
-			CWorldParts_Draw(WorldParts);			
+			CWorldParts_Draw(WorldParts);
+			if ((InstalledLevels > 0))
+			{
+				pd->graphics->fillRect(0, ORIG_WINDOW_HEIGHT - 16 * UI_HEIGHT_SCALE, 320 * UI_WIDTH_SCALE, 17 * UI_HEIGHT_SCALE, kColorWhite);
+				pd->graphics->drawRect(0, ORIG_WINDOW_HEIGHT - 16 * UI_HEIGHT_SCALE, 320 * UI_WIDTH_SCALE, 17 * UI_HEIGHT_SCALE, kColorBlack);
+				if (WorldParts->isLevelPackFileLevel)
+				{
+					if ((strlen(LevelPackFile->LevelsMeta[SelectedLevel - 1].title) > 0) || (strlen(LevelPackFile->LevelsMeta[SelectedLevel - 1].author) > 0))
+					{
+						if (strlen(LevelPackFile->LevelsMeta[SelectedLevel - 1].author) > 0)
+							pd->system->formatString(&Tekst, "%s by %s", LevelPackFile->LevelsMeta[SelectedLevel - 1].title, LevelPackFile->LevelsMeta[SelectedLevel - 1].author);
+						else
+							pd->system->formatString(&Tekst, "%s by %s", LevelPackFile->LevelsMeta[SelectedLevel - 1].title, LevelPackFile->author);
+						int w = pd->graphics->getTextWidth(font, Tekst, strlen(Tekst), kUTF8Encoding, 0);
+						drawText(font, Tekst, strlen(Tekst), kUTF8Encoding, (ORIG_WINDOW_WIDTH - w) / 2, ORIG_WINDOW_HEIGHT - 13 * UI_HEIGHT_SCALE);
+						pd->system->realloc(Tekst, 0);
+					}
+				}
+				else
+				{
+					if (strlen(NormalCreateName) > 0)
+						pd->system->formatString(&Tekst, "Level %d by %s", SelectedLevel, NormalCreateName);
+					else
+						pd->system->formatString(&Tekst, "Leved %d", SelectedLevel);
+					int w = pd->graphics->getTextWidth(font, Tekst, strlen(Tekst), kUTF8Encoding, 0);
+					drawText(font, Tekst, strlen(Tekst), kUTF8Encoding, (ORIG_WINDOW_WIDTH - w) / 2, ORIG_WINDOW_HEIGHT - 13 * UI_HEIGHT_SCALE);
+					pd->system->realloc(Tekst, 0);
+				}
+			}
 		}
 		pd->graphics->fillRect(0, 0, 320 * UI_WIDTH_SCALE, 16 * UI_HEIGHT_SCALE, kColorWhite);
 		pd->graphics->drawRect(0, -1 * UI_HEIGHT_SCALE, 320 * UI_WIDTH_SCALE, 17 * UI_HEIGHT_SCALE, kColorBlack);
@@ -139,7 +170,7 @@ void StageSelect()
 				{
 					playMenuSound();
 
-					SelectedLevel-=10;
+					SelectedLevel -= 5;
 					if (SelectedLevel <= 0)
 					{
 						SelectedLevel = 0;
@@ -154,10 +185,12 @@ void StageSelect()
 						{
 							pd->system->realloc(FileName, 0);
 							pd->system->formatString(&FileName, "levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
-							CWorldParts_Load(WorldParts, FileName);
+							if (FileExists(FileName, true) || FileExists(FileName, false))
+								CWorldParts_Load(WorldParts, FileName);
+							else
+								CWorldParts_LoadFromLevelPackFile(WorldParts, LevelPackFile, SelectedLevel, true);
 						}
 						pd->system->realloc(FileName, 0);
-						CWorldParts_LimitVPLevel(WorldParts);
 					}
 				}
 			}
@@ -167,7 +200,7 @@ void StageSelect()
 				{
 					playMenuSound();
 
-					SelectedLevel-=10;
+					SelectedLevel -= 5;
 					if (SelectedLevel < 1)
 						SelectedLevel = 1;
 					pd->system->formatString(&FileName, "levelpacks/%s._lev/level%d.lev", LevelPackName, SelectedLevel);
@@ -177,10 +210,12 @@ void StageSelect()
 					{
 						pd->system->realloc(FileName, 0);
 						pd->system->formatString(&FileName, "levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
-						CWorldParts_Load(WorldParts, FileName);						
+						if (FileExists(FileName, true) || FileExists(FileName, false))
+							CWorldParts_Load(WorldParts, FileName);
+						else
+							CWorldParts_LoadFromLevelPackFile(WorldParts, LevelPackFile, SelectedLevel, true);
 					}
 					pd->system->realloc(FileName, 0);
-					CWorldParts_LimitVPLevel(WorldParts);
 				}
 			}
 		}
@@ -189,7 +224,7 @@ void StageSelect()
 		{
 			if (SelectedLevel != InstalledLevels)
 			{
-				SelectedLevel+=10;
+				SelectedLevel += 5;
 				playMenuSound();
 				if (SelectedLevel > InstalledLevels)
 					SelectedLevel = InstalledLevels;
@@ -200,10 +235,12 @@ void StageSelect()
 				{
 					pd->system->realloc(FileName, 0);
 					pd->system->formatString(&FileName, "levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
-					CWorldParts_Load(WorldParts, FileName);
+					if (FileExists(FileName, true) || FileExists(FileName, false))
+						CWorldParts_Load(WorldParts, FileName);
+					else
+						CWorldParts_LoadFromLevelPackFile(WorldParts, LevelPackFile, SelectedLevel, true);
 				}
 				pd->system->realloc(FileName, 0);
-				CWorldParts_LimitVPLevel(WorldParts);
 			}
 		}
 
@@ -234,10 +271,12 @@ void StageSelect()
 							{
 								pd->system->realloc(FileName, 0);
 								pd->system->formatString(&FileName, "levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
-								CWorldParts_Load(WorldParts, FileName);								
+								if (FileExists(FileName, true) || FileExists(FileName, false))
+									CWorldParts_Load(WorldParts, FileName);
+								else
+									CWorldParts_LoadFromLevelPackFile(WorldParts, LevelPackFile, SelectedLevel, true);
 							}
 							pd->system->realloc(FileName, 0);
-							CWorldParts_LimitVPLevel(WorldParts);
 						}
 					}
 				}
@@ -257,10 +296,12 @@ void StageSelect()
 						{
 							pd->system->realloc(FileName, 0);
 							pd->system->formatString(&FileName, "levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
-							CWorldParts_Load(WorldParts, FileName);							
+							if (FileExists(FileName, true) || FileExists(FileName, false))
+								CWorldParts_Load(WorldParts, FileName);
+							else
+								CWorldParts_LoadFromLevelPackFile(WorldParts, LevelPackFile, SelectedLevel, true);
 						}
 						pd->system->realloc(FileName, 0);
-						CWorldParts_LimitVPLevel(WorldParts);
 					}
 				}
 			}
@@ -285,10 +326,12 @@ void StageSelect()
 					{
 						pd->system->realloc(FileName, 0);
 						pd->system->formatString(&FileName, "levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
-						CWorldParts_Load(WorldParts, FileName);
+						if (FileExists(FileName, true) || FileExists(FileName, false))
+							CWorldParts_Load(WorldParts, FileName);
+						else
+							CWorldParts_LoadFromLevelPackFile(WorldParts, LevelPackFile, SelectedLevel, true);
 					}
 					pd->system->realloc(FileName, 0);
-					CWorldParts_LimitVPLevel(WorldParts);
 				}
 			}
 		}
@@ -309,10 +352,12 @@ void StageSelect()
 					{
 						pd->system->realloc(FileName, 0);
 						pd->system->formatString(&FileName, "levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
-						CWorldParts_Load(WorldParts, FileName);
+						if (FileExists(FileName, true) || FileExists(FileName, false))
+							CWorldParts_Load(WorldParts, FileName);
+						else
+							CWorldParts_LoadFromLevelPackFile(WorldParts, LevelPackFile, SelectedLevel, true);
 					}
 					pd->system->realloc(FileName, 0);
-					CWorldParts_LimitVPLevel(WorldParts);
 					GameState = GSGameInit;
 				}
 			}
@@ -321,20 +366,20 @@ void StageSelect()
 			{
 				if(response)
 				{
-					pd->system->formatString(&Tekst,"levelpacks/%s._lev/level%d.lev", LevelPackName, SelectedLevel);
+					pd->system->formatString(&Tekst, "levelpacks/%s._lev/level%d.lev", LevelPackName, SelectedLevel);
 					//to edit default levels
-					if(FileExists(Tekst, true))
+					if (FileExists(Tekst, true))
 					{
 						pd->file->unlink(Tekst, false);
-						pd->system->formatString(&FileName,"./levelpacks/%s/level%d.lev",LevelPackName,SelectedLevel);
+						pd->system->formatString(&FileName, "./levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
 						//only swap levels if we did not edit a level that also exists as a default level
-						if(!FileExists(FileName, false) && (SelectedLevel > 0))
+						if (!FileExists(FileName, false) && (SelectedLevel > LevelPackFile->LevelCount))
 						{
-							for(Teller=SelectedLevel;Teller<InstalledLevels;Teller++)
-							{						
-								char* file1, *file2;
-								pd->system->formatString(&file1,"levelpacks/%s._lev/level%d.lev", LevelPackName, Teller+1);
-								pd->system->formatString(&file2,"levelpacks/%s._lev/level%d.lev", LevelPackName,Teller);
+							for (Teller = SelectedLevel; Teller < InstalledLevels; Teller++)
+							{
+								char* file1, * file2;
+								pd->system->formatString(&file1, "levelpacks/%s._lev/level%d.lev", LevelPackName, Teller + 1);
+								pd->system->formatString(&file2, "levelpacks/%s._lev/level%d.lev", LevelPackName, Teller);
 								pd->file->rename(file1, file2);
 								pd->system->realloc(file1, 0);
 								pd->system->realloc(file2, 0);
@@ -344,20 +389,22 @@ void StageSelect()
 						FindLevels();
 						if (SelectedLevel > InstalledLevels)
 							SelectedLevel = InstalledLevels;
-						if (SelectedLevel==0)
+						if (SelectedLevel == 0)
 							CWorldParts_RemoveAll(WorldParts);
 						else
 						{
-							pd->system->formatString(&FileName,"levelpacks/%s._lev/level%d.lev", LevelPackName, SelectedLevel);
-							if(!FileExists(FileName, true))
+							pd->system->formatString(&FileName, "levelpacks/%s._lev/level%d.lev", LevelPackName, SelectedLevel);
+							if (!FileExists(FileName, true))
 							{
 								pd->system->realloc(FileName, 0);
-								pd->system->formatString(&FileName,"levelpacks/%s/level%d.lev",LevelPackName,SelectedLevel);
+								pd->system->formatString(&FileName, "levelpacks/%s/level%d.lev", LevelPackName, SelectedLevel);
 							}
-							CWorldParts_Load(WorldParts,FileName);
+							if (FileExists(FileName, true) || FileExists(FileName, false))
+								CWorldParts_Load(WorldParts, FileName);
+							else
+								CWorldParts_LoadFromLevelPackFile(WorldParts, LevelPackFile, SelectedLevel, true);
 							pd->system->realloc(FileName, 0);
-							CWorldParts_LimitVPLevel(WorldParts);
-						}						 
+						}
 					}
 					pd->system->realloc(Tekst, 0);
 				}
