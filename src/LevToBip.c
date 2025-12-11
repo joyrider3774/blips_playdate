@@ -11,7 +11,7 @@ int _capacity = 100;
 SDFile* _outputfile;
 int _level_num = 0;
 char* _author;
-Level level;
+Level _level;
 
 // ASCII representation mapping
 char tile_to_char(int tile) 
@@ -325,8 +325,8 @@ int ConvertLevToBipContinue()
 
     // Convert each level
          
-    if (load_lev_file(_filenames[_level_num], &level)) {        
-        write_level_ascii(_outputfile, &level, _level_num+1, _author, _filenames[_level_num]);
+    if (load_lev_file(_filenames[_level_num], &_level)) {
+        write_level_ascii(_outputfile, &_level, _level_num+1, _author, _filenames[_level_num]);
     }
     pd->system->realloc(_filenames[_level_num], 0);
     _level_num++;
