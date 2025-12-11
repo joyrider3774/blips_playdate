@@ -1,4 +1,5 @@
 #include <limits.h>
+#include <string.h>
 #include <stdlib.h>
 #include "Defines.h"
 #include "pd_api.h"
