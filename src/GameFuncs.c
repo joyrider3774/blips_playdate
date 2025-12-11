@@ -160,6 +160,24 @@ void LoadUnlockData()
 	UnlockedLevels = 1;
 	pd->system->formatString(&FileName, "%s.dat", LevelPackName);
 	Fp = pd->file->open(FileName, kFileReadData);
+	//in case of default levels which are now text based bip files, check if
+	//the original lock file data still exists and rename it
+	if (!(Fp) && ((strcmp(LevelPackName, "bips.bip") == 0) || (strcmp(LevelPackName, "bips_gold.bip") == 0) ||
+		(strcmp(LevelPackName, "bips_gold_2_players") == 0) || (strcmp(LevelPackName, "bips_platinum.bip") == 0)))
+	{	
+		char dup[512];
+		char* dot;
+		char* oldFileName;
+		memset(dup, 0, 512 * sizeof(char));
+		strncpy(dup, LevelPackName, 511);
+		dot = strrchr(dup, '.');
+		if (dot)
+			*dot = '\0';
+		pd->system->formatString(&oldFileName, "%s.dat", dup);
+		pd->file->rename(oldFileName, FileName);
+		pd->system->realloc(oldFileName, 0);
+		Fp = pd->file->open(FileName, kFileReadData);
+	}
 	if (Fp)
 	{
 		pd->file->read(Fp, &UnlockedLevels, sizeof(UnlockedLevels));
@@ -530,8 +548,8 @@ void SearchForLevelPacksListFiles(const char* path, void* userdata)
 		{
 			char Name[MaxLevelPackNameLength + 1];
 			memset(Name, 0, sizeof(Name));
-			strncpy(Name, path, strlen(path) - 1);
-			Name[strlen(path)] = '\0';
+			strncpy(Name, path, MaxLevelPackNameLength);
+			Name[strlen(path)-1] = '\0';
 			char* ext = strstr(Name, "._lev");
 			if (ext)
 				*ext = 0;
