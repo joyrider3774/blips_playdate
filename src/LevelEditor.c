@@ -523,9 +523,9 @@ void LevelEditor()
 					if (ShowPosition)
 					{
 						pd->system->formatString(&Tekst, "X: %d - Y: %d", CSelector_GetPlayFieldX(Selector), CSelector_GetPlayFieldY(Selector));
-						pd->graphics->fillRect(ORIG_WINDOW_WIDTH - 50 * UI_WIDTH_SCALE, 0, 50 * UI_WIDTH_SCALE, 13 * UI_HEIGHT_SCALE, kColorWhite);
-						pd->graphics->drawRect(ORIG_WINDOW_WIDTH - 50 * UI_WIDTH_SCALE, -1, 51 * UI_WIDTH_SCALE, 14 * UI_HEIGHT_SCALE, kColorBlack);
-						drawText(font, Tekst, strlen(Tekst), kASCIIEncoding, 272 * UI_WIDTH_SCALE, 2 * UI_HEIGHT_SCALE);
+						pd->graphics->fillRect(ORIG_WINDOW_WIDTH - 60 * UI_WIDTH_SCALE, 0, 60 * UI_WIDTH_SCALE, 17 * UI_HEIGHT_SCALE, kColorWhite);
+						pd->graphics->drawRect(ORIG_WINDOW_WIDTH - 60 * UI_WIDTH_SCALE, -1, 61 * UI_WIDTH_SCALE, 18 * UI_HEIGHT_SCALE, kColorBlack);
+						drawText(font, Tekst, strlen(Tekst), kASCIIEncoding, 262 * UI_WIDTH_SCALE, 2 * UI_HEIGHT_SCALE);
 						pd->system->realloc(Tekst, 0);
 					}
 					if (!LevelErrorsFound())
