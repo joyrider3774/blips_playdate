@@ -443,9 +443,9 @@ void FloodFill(CWorldParts* aWorldParts, bool** visited, int X, int Y)
 	FloodFill(aWorldParts, visited, X, Y - 1);
 }
 
-void  CWorldParts_DrawFloor(CWorldParts* WorldParts, CWorldPart* Player)
+void  CWorldParts_DrawFloor(CWorldParts* WorldParts, CWorldPart* Player, CWorldPart* Player2)
 {
-	if (!Player)
+	if (!Player && !Player2)
 		return;
 	// Allocate memory for the visited array
 	bool** visited = (bool**)pd->system->realloc(NULL, NrOfRows * sizeof(bool*));
@@ -458,8 +458,10 @@ void  CWorldParts_DrawFloor(CWorldParts* WorldParts, CWorldPart* Player)
 				for (int j = 0; j < NrOfCols; ++j)
 					visited[i][j] = false; // Initialize the array to false
 		}
-
-		FloodFill(WorldParts, visited, Player->PlayFieldX, Player->PlayFieldY);
+		if(Player)
+			FloodFill(WorldParts, visited, Player->PlayFieldX, Player->PlayFieldY);
+		if(Player2)
+			FloodFill(WorldParts, visited, Player2->PlayFieldX, Player2->PlayFieldY);
 
 		// Free the allocated memory for the visited array
 		for (int i = 0; i < NrOfRows; ++i)

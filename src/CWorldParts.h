@@ -38,6 +38,6 @@ void CWorldParts_Save_vircon(CWorldParts* WorldParts, char* Filename);
 void CWorldParts_Save(CWorldParts* WorldParts, char *Filename);
 bool CWorldParts_LoadFromLevelPackFile(CWorldParts* WorldParts, CLevelPackFile* LPFile, int level, bool doCenterLevel);
 void CWorldParts_Load(CWorldParts* WorldParts, char *Filename);
-void CWorldParts_DrawFloor(CWorldParts* WorldParts, CWorldPart* Player);
+void CWorldParts_DrawFloor(CWorldParts* WorldParts, CWorldPart* Player, CWorldPart* Player2);
 void CWorldParts_Destroy(CWorldParts* WorldParts);
 #endif

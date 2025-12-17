@@ -28,7 +28,7 @@ void RestartLevel()
 		playMenuSelectSound();
 		pd->graphics->drawBitmap(IMGBackground, 0, 0, kBitmapUnflipped);
 #ifdef SDL2API
-		CWorldParts_DrawFloor(WorldParts, WorldParts->Player);
+		CWorldParts_DrawFloor(WorldParts, WorldParts->Player1, WorldParts->Player2);
 #endif
 		CWorldParts_Draw(WorldParts);
 		AskQuestion(IDRestartLevel, "You are about to restart this level\nAre you sure you want to restart?\n\nPress (A) to Restart (B) to Cancel");
@@ -205,10 +205,10 @@ void Game()
 		
 		if(!AskingQuestion)
 		{
-			pd->graphics->drawBitmap(IMGBackground, 0, 0, kBitmapUnflipped);		
+			pd->graphics->drawBitmap(IMGBackground, 0, 0, kBitmapUnflipped);
 			CWorldParts_Move(WorldParts);
 #ifdef SDL2API
-			CWorldParts_DrawFloor(WorldParts, WorldParts->Player);
+			CWorldParts_DrawFloor(WorldParts, WorldParts->Player1, WorldParts->Player2);
 #endif
 			CWorldParts_Draw(WorldParts);
 			if (false)

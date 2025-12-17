@@ -89,7 +89,7 @@ void StageSelect()
 		{
 			//CWorldParts_Move(WorldParts);
 #ifdef SDL2API
-			CWorldParts_DrawFloor(WorldParts, WorldParts->Player);
+			CWorldParts_DrawFloor(WorldParts, WorldParts->Player1, WorldParts->Player2);
 #endif
 			CWorldParts_Draw(WorldParts);
 			if ((InstalledLevels > 0))

@@ -187,7 +187,7 @@ void LevelEditor()
 		pd->graphics->drawBitmap(IMGBackground,0,0,kBitmapUnflipped);
 		CWorldParts_Move(WorldParts);
 #ifdef SDL2API
-		CWorldParts_DrawFloor(WorldParts,WorldParts->Player);
+		CWorldParts_DrawFloor(WorldParts, WorldParts->Player1, WorldParts->Player2);
 #endif		
 		CWorldParts_Draw(WorldParts);
 		CSelector_Draw(Selector);
@@ -516,7 +516,7 @@ void LevelEditor()
 					pd->graphics->drawBitmap(IMGBackground,0,0,kBitmapUnflipped);
 					CWorldParts_Move(WorldParts);
 #ifdef SDL2API
-					CWorldParts_DrawFloor(WorldParts,WorldParts->Player);
+					CWorldParts_DrawFloor(WorldParts, WorldParts->Player1, WorldParts->Player2);
 #endif
 					CWorldParts_Draw(WorldParts);
 					CSelector_Draw(Selector);
