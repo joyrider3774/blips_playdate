@@ -103,6 +103,7 @@ void CWorldParts_RemoveAll(CWorldParts* WorldParts)
 	WorldParts->ActivePlayer = -1;
 	WorldParts->Player1 = NULL;
 	WorldParts->Player2 = NULL;
+	WorldParts->Player = NULL;
 }
 void CWorldParts_Remove(CWorldParts* WorldParts, int PlayFieldXin,int PlayFieldYin)
 {
@@ -131,6 +132,38 @@ void CWorldParts_Remove(CWorldParts* WorldParts, int PlayFieldXin,int PlayFieldY
 
 		if ((WorldParts->Items[Teller1]->PlayFieldX == PlayFieldXin) && (WorldParts->Items[Teller1]->PlayFieldY == PlayFieldYin))
 		{
+			bool checkPlayer = false;
+			if(WorldParts->Items[Teller1]->Type == IDPlayer)
+			{
+				checkPlayer = true;
+				WorldParts->Player1 = NULL;
+			}
+			if(WorldParts->Items[Teller1]->Type == IDPlayer2)
+			{
+				checkPlayer = true;
+				WorldParts->Player2 = NULL;
+			}
+			if(checkPlayer)
+			{
+				if((WorldParts->Player1 && WorldParts->Player2) ||
+					(WorldParts->Player1 && !WorldParts->Player2))
+				{
+					WorldParts->Player = WorldParts->Player1;
+					WorldParts->ActivePlayer = IDPlayer;
+				}
+
+				if (!WorldParts->Player1 && WorldParts->Player2)
+				{
+					WorldParts->Player = WorldParts->Player2;
+					WorldParts->ActivePlayer = IDPlayer2;
+				}
+
+				if (!WorldParts->Player1 && !WorldParts->Player2)
+				{
+					WorldParts->ActivePlayer = -1;
+					WorldParts->Player = NULL;
+				}
+			}
 			CWorldPart_Destroy(WorldParts->Items[Teller1]);
 			for (Teller2=Teller1;Teller2<WorldParts->ItemCount-1;Teller2++)
 				WorldParts->Items[Teller2] = WorldParts->Items[Teller2+1];
@@ -169,6 +202,41 @@ void CWorldParts_Remove_Type(CWorldParts* WorldParts, int PlayFieldXin,int PlayF
 
 		if ((WorldParts->Items[Teller1]->PlayFieldX == PlayFieldXin) && (WorldParts->Items[Teller1]->PlayFieldY == PlayFieldYin) && (WorldParts->Items[Teller1]->Type == Type))
 		{
+			bool checkPlayer = false;
+			if(WorldParts->Items[Teller1]->Type == IDPlayer)
+			{
+				checkPlayer = true;
+				WorldParts->Player1 = NULL;
+			}
+			if(WorldParts->Items[Teller1]->Type == IDPlayer2)
+			{
+				checkPlayer = true;
+				WorldParts->Player2 = NULL;
+			}
+			if(checkPlayer)
+			{
+				if((WorldParts->Player1 && WorldParts->Player2) ||
+					(WorldParts->Player1 && !WorldParts->Player2))
+				{
+					WorldParts->Player = WorldParts->Player1;
+					WorldParts->ActivePlayer = IDPlayer;
+				}
+
+				if (!WorldParts->Player1 && WorldParts->Player2)
+				{
+					WorldParts->Player = WorldParts->Player2;
+					WorldParts->ActivePlayer = IDPlayer2;
+				}
+
+				if (!WorldParts->Player1 && !WorldParts->Player2)
+				{
+					WorldParts->ActivePlayer = -1;
+					WorldParts->Player = NULL;
+				}
+			}
+
+
+			
 			CWorldPart_Destroy(WorldParts->Items[Teller1]);
 			for (Teller2=Teller1;Teller2<WorldParts->ItemCount-1;Teller2++)
 				WorldParts->Items[Teller2] = WorldParts->Items[Teller2+1];
