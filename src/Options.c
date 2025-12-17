@@ -39,7 +39,7 @@ void Options()
 	pd->system->realloc(Tekst, 0);
 	Tekst = pd->system->realloc(NULL, 100);
 	if (Selection > 1)
-	{			
+	{
 		strcpy(Tekst," \n");
 		for(Teller=2;Teller<Selection;Teller++)
 			strcat(Tekst,"\n");
