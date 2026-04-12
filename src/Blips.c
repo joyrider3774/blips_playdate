@@ -14,6 +14,7 @@
 #include "Sound.h"
 #include "Options.h"
 #include "Instructions.h"
+#include "Menus.h"
 
 void setupGame()
 {
@@ -76,6 +77,7 @@ void terminateGame()
 	CWorldParts_RemoveAll(WorldParts);
 	CWorldParts_Destroy(WorldParts);
 	CLevelPackFile_Destroy(LevelPackFile);
+	DestroyMenuItems();
 }
 
 
