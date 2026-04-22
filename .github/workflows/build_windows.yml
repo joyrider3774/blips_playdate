@@ -89,6 +89,10 @@ jobs:
           cp /${{matrix.sys}}/bin/SDL2*.dll Source/
           cp /${{matrix.sys}}/bin/libsharpyuv*.dll Source/
           cp /${{matrix.sys}}/bin/libwinpthread*.dll Source/
+          cp /${{matrix.sys}}/bin/libavif-*.dll Source/
+          cp /${{matrix.sys}}/bin/libFLAC.dll Source/
+          cp /${{matrix.sys}}/bin/libvorbisfile-*.dll Source/
+          cp /${{matrix.sys}}/bin/libwavpack-*.dll Source/
       - name: Store build
         uses: actions/upload-artifact@v7
         with:
